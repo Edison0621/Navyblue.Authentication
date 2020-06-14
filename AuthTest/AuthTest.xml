@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AuthTest</name>
+    </assembly>
+    <members>
+        <member name="T:AuthTest.Controllers.AuthController">
+            <summary>
+            Class AuthController.
+            Implements the <see cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+            </summary>
+            <seealso cref="T:Microsoft.AspNetCore.Mvc.Controller" />
+        </member>
+        <member name="F:AuthTest.Controllers.AuthController.accessTokenProtector">
+            <summary>
+            The jym access token protector
+            </summary>
+        </member>
+        <member name="F:AuthTest.Controllers.AuthController._authConfig">
+            <summary>
+            The authentication configuration
+            </summary>
+        </member>
+        <member name="F:AuthTest.Controllers.AuthController.bearerAuthKeys">
+            <summary>
+            The bearer authentication keys
+            </summary>
+        </member>
+        <member name="M:AuthTest.Controllers.AuthController.#ctor(Microsoft.Extensions.Options.IOptions{Navyblue.Authentication.AuthConfig})">
+            <summary>
+            Initializes a new instance of the <see cref="T:AuthTest.Controllers.AuthController"/> class.
+            </summary>
+            <param name="authConfigOptions">The authentication configuration options.</param>
+        </member>
+        <member name="P:AuthTest.Controllers.AuthController.AccessTokenProtector">
+            <summary>
+            Gets the access token protector.
+            </summary>
+            <value>The access token protector.</value>
+        </member>
+        <member name="M:AuthTest.Controllers.AuthController.GetAuthToken">
+            <summary>
+            Gets the authentication token.
+            </summary>
+            <returns>IActionResult.</returns>
+        </member>
+        <member name="M:AuthTest.Controllers.AuthController.TestAuthToken">
+            <summary>
+            Gets the authentication token.
+            </summary>
+            <returns>IActionResult.</returns>
+        </member>
+        <member name="M:AuthTest.Controllers.AuthController.BuildAuthToken(System.String,System.String)">
+            <summary>
+            Builds the authentication token.
+            </summary>
+            <param name="userIdentifier">The user identifier.</param>
+            <param name="schemeName">Name of the scheme.</param>
+            <returns>System.String.</returns>
+        </member>
+        <member name="M:AuthTest.Controllers.AuthController.InitJYMAccessTokenProtector">
+            <summary>
+            Initializes the jym access token protector.
+            </summary>
+            <returns>AccessTokenProtector.</returns>
+        </member>
+        <member name="M:AuthTest.Controllers.AuthController.BuildPrincipal(System.String,System.String,System.Int32)">
+            <summary>
+            Builds the principal.
+            </summary>
+            <param name="userIdentifier">The user identifier.</param>
+            <param name="schemeName">Name of the scheme.</param>
+            <param name="expirationSeconds">The expiration seconds.</param>
+            <returns>ClaimsIdentity.</returns>
+        </member>
+        <member name="M:AuthTest.Controllers.AuthController.GetExpiryTimestamp">
+            <summary>
+            Gets the expiry timestamp.
+            </summary>
+            <returns>System.Int64.</returns>
+        </member>
+        <member name="T:AuthTest.Program">
+            <summary>
+            Class Program.
+            </summary>
+        </member>
+        <member name="M:AuthTest.Program.Main(System.String[])">
+            <summary>
+            Defines the entry point of the application.
+            </summary>
+            <param name="args">The arguments.</param>
+        </member>
+        <member name="M:AuthTest.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            Creates the host builder.
+            </summary>
+            <param name="args">The arguments.</param>
+            <returns>IHostBuilder.</returns>
+        </member>
+        <member name="T:AuthTest.Startup">
+            <summary>
+            Class Startup.
+            </summary>
+        </member>
+        <member name="M:AuthTest.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:AuthTest.Startup"/> class.
+            </summary>
+            <param name="configuration">The configuration.</param>
+        </member>
+        <member name="P:AuthTest.Startup.Configuration">
+            <summary>
+            Gets the configuration.
+            </summary>
+            <value>The configuration.</value>
+        </member>
+        <member name="M:AuthTest.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures the services.
+            </summary>
+            <param name="services">The services.</param>
+        </member>
+        <member name="M:AuthTest.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            Configures the specified application.
+            </summary>
+            <param name="app">The application.</param>
+            <param name="env">The env.</param>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30204.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthTest", "AuthTest\AuthTest.csproj", "{938CB7BF-A987-4573-93E0-D7AF726AFCE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Navyblue.Authentication", "KittSoftware.Authentication\Navyblue.Authentication.csproj", "{C45BB6B0-FAC9-4746-B52F-BC070AA3452C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{938CB7BF-A987-4573-93E0-D7AF726AFCE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{938CB7BF-A987-4573-93E0-D7AF726AFCE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{938CB7BF-A987-4573-93E0-D7AF726AFCE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{938CB7BF-A987-4573-93E0-D7AF726AFCE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C45BB6B0-FAC9-4746-B52F-BC070AA3452C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C45BB6B0-FAC9-4746-B52F-BC070AA3452C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C45BB6B0-FAC9-4746-B52F-BC070AA3452C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C45BB6B0-FAC9-4746-B52F-BC070AA3452C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B1974001-37BB-434F-88E0-8ED09892ABE3}
+	EndGlobalSection
+EndGlobal
