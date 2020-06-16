@@ -1,6 +1,10 @@
 # Navyblue.Authentication
 The package is for developer to create auth function module, you just configure little information and then your api will be protected by this package.
 
+# Detals
+![gettoken](/Images/gettoken.png)
+![validate](/Images/validate.png)
+
 # How to use it
 - In Startup.ConfigureServices
 ```
