@@ -28,6 +28,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 using Navyblue.Authentication.Extensions;
+using Navyblue.Authorization.Extensions;
 using Navyblue.BaseLibrary;
 using Newtonsoft.Json.Linq;
 

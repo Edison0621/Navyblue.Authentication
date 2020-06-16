@@ -12,7 +12,7 @@
 // *****************************************************************************************************************
 
 using Microsoft.AspNetCore.Builder;
-using Navyblue.Authentication.Middlewares.Middleware;
+using Navyblue.Authentication.Middlewares;
 
 namespace Navyblue.Authentication.Extensions
 {

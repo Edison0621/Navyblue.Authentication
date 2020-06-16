@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 using Navyblue.BaseLibrary;
+using Navyblue.Authorization;
 
 namespace Navyblue.Authentication.Middlewares
 {

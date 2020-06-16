@@ -16,7 +16,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Net;
 using System.Text.RegularExpressions;
-using Navyblue.Authentication.Extensions;
+using Navyblue.Authorization.Filters;
+using Navyblue.Authorization.Extensions;
 
 namespace Navyblue.Authentication.Authorizations
 {
