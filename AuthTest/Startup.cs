@@ -44,7 +44,7 @@ namespace AuthTest
 
             services.AddOptions();
 
-            services.AddBearerService(this.Configuration.GetSection("AuthConfig"));
+            services.AddBearerService(this.Configuration.GetSection("NavyAuthorizationConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
