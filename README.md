@@ -1,5 +1,5 @@
 # Navyblue.Authentication
-The package is for developer to create auth function module, you just configure little information and then your api will be protected by this package.
+The package is for developer to create auth function module, you just only need to configure little information and then your api will be protected by this package.
 
 # Detals
 - Getting token
