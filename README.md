@@ -8,6 +8,9 @@ The package is for developer to create auth function module, you just configure 
 - Validate
 ![validate](/Images/validate.png)
 
+- Forbid
+![validate](/Images/error.png)
+
 # How to use it
 - In Startup.ConfigureServices
 ```
