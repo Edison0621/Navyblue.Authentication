@@ -19,19 +19,8 @@ namespace AuthTest.Controllers
     [Route("[controller]")]
     public class AuthController : BaseApiController
     {
-        /// <summary>
-        /// The jym access token protector
-        /// </summary>
-        private static readonly Lazy<AccessTokenProtector> accessTokenProtector = new Lazy<AccessTokenProtector>(() => InitJYMAccessTokenProtector());
-
-        /// <summary>
-        /// The authentication configuration
-        /// </summary>
+        private static readonly Lazy<AccessTokenProtector> accessTokenProtector = new Lazy<AccessTokenProtector>(() => InitAccessTokenProtector());
         private readonly AuthorizationConfig _authConfig;
-
-        /// <summary>
-        /// The bearer authentication keys
-        /// </summary>
         private static string bearerAuthKeys;
 
         /// <summary>
@@ -44,10 +33,6 @@ namespace AuthTest.Controllers
             bearerAuthKeys = this._authConfig.BearerAuthKeys;
         }
 
-        /// <summary>
-        /// Gets the access token protector.
-        /// </summary>
-        /// <value>The access token protector.</value>
         private AccessTokenProtector AccessTokenProtector => accessTokenProtector.Value;
 
         /// <summary>
@@ -91,7 +76,7 @@ namespace AuthTest.Controllers
         /// Initializes the jym access token protector.
         /// </summary>
         /// <returns>AccessTokenProtector.</returns>
-        private static AccessTokenProtector InitJYMAccessTokenProtector()
+        private static AccessTokenProtector InitAccessTokenProtector()
         {
             return new AccessTokenProtector(bearerAuthKeys.HtmlDecode());
         }
@@ -107,7 +92,7 @@ namespace AuthTest.Controllers
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, userIdentifier),
+                new Claim(ClaimTypes.Name, userIdentifier),//TODO: you can add other property
                 new Claim(ClaimTypes.Expiration, expirationSeconds==0? this.GetExpiryTimestamp().ToString():expirationSeconds.ToString())
             };
 
@@ -115,14 +100,15 @@ namespace AuthTest.Controllers
         }
 
         /// <summary>
-        /// Gets the expiry timestamp.
+        /// Gets the expiry timestamp. 901 is Android， 902 is IOS
+        /// How long the token will be effective
         /// </summary>
         /// <returns>System.Int64.</returns>
         protected long GetExpiryTimestamp()
         {
             int duration = this._authConfig.PCSignInExpirationSeconds;
             TraceEntry traceEntry = this.Request.GetTraceEntry();
-            if (traceEntry.ClientId.Contains("901") || traceEntry.ClientId.Contains("902"))
+            if (traceEntry.ClientId.Contains(_authConfig.IOSClientId) || traceEntry.ClientId.Contains(_authConfig.AndroidClientId))
             {
                 duration = this._authConfig.AppSignInExpirationSeconds;
             }

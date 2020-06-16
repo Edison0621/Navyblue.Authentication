@@ -32,6 +32,10 @@ namespace Navyblue.Authentication.Authorizations
 
         public int MobileSignInExpirationSeconds { get; set; }
 
+        public string AndroidClientId { get; set; }
+
+        public string IOSClientId { get; set; }
+
         public string AuthHeaderName { get; set; }
     }
 }
