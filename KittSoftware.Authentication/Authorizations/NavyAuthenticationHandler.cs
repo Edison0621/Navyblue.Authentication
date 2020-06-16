@@ -1,54 +1,40 @@
-﻿// *****************************************************************************************************************
-// Project          : Navyblue
-// File             : AuthorizationMiddleware.cs
-// Created          : 2019-01-14  17:44
-//
+﻿// ******************************************************************************************************
+// Project          : AuthTest
+// File             : BasicAuthenticationHandler.cs
+// Created          : 2020-06-14  22:42
+// 
 // Last Modified By : (jstsmaxx@163.com)
-// Last Modified On : 2019-01-15  15:58
-// *****************************************************************************************************************
-// <copyright file="AuthorizationMiddleware.cs" company="Shanghai Future Mdt InfoTech Ltd.">
-//     Copyright ©  2012-2019 Mdt InfoTech Ltd. All rights reserved.
+// Last Modified On : 2020-06-14  22:42
+// ******************************************************************************************************
+// <copyright file="BasicAuthenticationHandler.cs" company="Shanghai Future Mdt InfoTech Ltd.">
+//     Copyright ©  2012-2020 Shanghai Future  Mdt InfoTech Ltd. All rights reserved.
 // </copyright>
-// *****************************************************************************************************************
+// ******************************************************************************************************
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
-using Microsoft.Net.Http.Headers;
-using Navyblue.Authentication.Extensions;
-using Newtonsoft.Json.Linq;
+
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
+using Navyblue.Authentication.Extensions;
 using Navyblue.BaseLibrary;
+using Newtonsoft.Json.Linq;
 
-namespace Navyblue.Authentication.Middlewares.Middleware
+namespace Navyblue.Authentication
 {
-    /// <summary>
-    ///     AuthorizationMiddleware.
-    /// </summary>
-    public class AuthorizationMiddleware
+    public class NavyAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
     {
-        private readonly RequestDelegate _next;
-        private readonly AccessTokenProtector accessTokenProtector;
-        private HttpContext _httpContext;
-        private readonly AuthConfig authConfig;
-
-        public AuthorizationMiddleware(RequestDelegate next,
-            IOptions<AuthConfig> authConfigOptions)
-        {
-            this._next = next;
-            this.authConfig = authConfigOptions.Value;
-            this.accessTokenProtector = new AccessTokenProtector(this.authConfig.BearerAuthKeys.HtmlDecode());
-            this.GovernmentServerPublicKey = this.authConfig.GovernmentServerPublicKey;
-            this.UseSwaggerAsApplicationForDev = this.authConfig.UseSwaggerAsApplicationForDev;
-            this.IPAllowedLists = this.authConfig.IPAllowedLists;
-        }
-
         /// <summary>
         ///     Gets a value indicating whether [use swagger as application for dev].
         /// </summary>
@@ -98,22 +84,34 @@ namespace Navyblue.Authentication.Middlewares.Middleware
 
         private List<string> IPAllowedLists { get; }
 
-        #region INavyBlueMiddleware Members
+        private HttpContext _httpContext;
+        private readonly AuthorizationConfig authConfig;
+        private readonly AccessTokenProtector accessTokenProtector;
 
-        /// <summary>
-        ///     Sends an HTTP request to the inner handler to send to the server as an asynchronous operation.
-        /// </summary>
-        /// <returns>
-        ///     Returns <see cref="T:System.Threading.Tasks.Task`1" />. The task object representing the asynchronous operation.
-        /// </returns>
-        public async Task Invoke(HttpContext httpContext)
+        public NavyAuthenticationHandler(
+            IOptionsMonitor<BasicAuthenticationOptions> options,
+            IHttpContextAccessor httpContextAccessor,
+            ILoggerFactory logger,
+            UrlEncoder encoder,
+            ISystemClock clock,
+            IOptions<AuthorizationConfig> authConfigOptions)
+            : base(options, logger, encoder, clock)
         {
-            this._httpContext = httpContext;
+            this._httpContext = httpContextAccessor.HttpContext;
+            this.authConfig = authConfigOptions.Value;
+            this.accessTokenProtector = new AccessTokenProtector(this.authConfig.BearerAuthKeys.HtmlDecode());
+            this.GovernmentServerPublicKey = this.authConfig.GovernmentServerPublicKey;
+            this.UseSwaggerAsApplicationForDev = this.authConfig.UseSwaggerAsApplicationForDev;
+            this.IPAllowedLists = this.authConfig.IPAllowedLists;
+        }
+
+        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
             if (this.HasAuthorizationHeader(this._httpContext.Request) && this._httpContext.Request.Headers[this.authConfig.AuthHeaderName] != StringValues.Empty)
             {
                 this.AuthorizeUserViaBearerToken(this._httpContext.Request);
             }
-            else if (this.GovernmentServerPublicKey != null && this.HasAuthorizationHeader(this._httpContext.Request, AuthScheme.InternalAuth))
+            else if (this.GovernmentServerPublicKey != null && this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.InternalAuth))
             {
                 this.AuthorizeApplicationViaAuthToken(this._httpContext.Request);
             }
@@ -134,20 +132,20 @@ namespace Navyblue.Authentication.Middlewares.Middleware
                 && this._httpContext.Request.Headers[this.authConfig.AuthHeaderName] == StringValues.Empty
                 && this.Identity != null
                 && this.Identity.IsAuthenticated
-                && this.Identity.AuthenticationType == AuthScheme.Bearer
+                && this.Identity.AuthenticationType == AuthorizationScheme.Bearer
                 && this._httpContext.Response.StatusCode == (int)HttpStatusCode.OK)
             {
                 await this.GenerateAndSetAccessToken();
             }
 
-            await this._next.Invoke(this._httpContext);
+            ClaimsPrincipal principal = new ClaimsPrincipal(this.Identity);
+            AuthenticationTicket ticket = new AuthenticationTicket(principal, this.Scheme.Name);
+            return AuthenticateResult.Success(ticket);
         }
-
-        #endregion INavyBlueMiddleware Members
 
         private bool HasAuthorizationHeader(HttpRequest request, string scheme = "Bearer")
         {
-            return request.Headers[this.authConfig.AuthHeaderName] != StringValues.Empty && request.Headers[this.authConfig.AuthHeaderName].Contains(scheme);
+            return request.Headers[this.authConfig.AuthHeaderName] != StringValues.Empty && request.Headers[this.authConfig.AuthHeaderName].ToString().Contains(scheme);
         }
 
         private void AuthorizeApplicationIfFromLocalhost()
@@ -156,7 +154,7 @@ namespace Navyblue.Authentication.Middlewares.Middleware
             {
                 new Claim(ClaimTypes.Name, "Localhost"),
                 new Claim(ClaimTypes.Role, "Application")
-            }, AuthScheme.InternalAuth);
+            }, AuthorizationScheme.InternalAuth);
         }
 
         private void AuthorizeApplicationIfFromSwagger()
@@ -165,7 +163,7 @@ namespace Navyblue.Authentication.Middlewares.Middleware
             {
                 new Claim(ClaimTypes.Name, "Swagger"),
                 new Claim(ClaimTypes.Role, "Application")
-            }, AuthScheme.InternalAuth);
+            }, AuthorizationScheme.InternalAuth);
         }
 
         private void AuthorizeApplicationIfFromIPAllowedLists(HttpRequest request)
@@ -175,7 +173,7 @@ namespace Navyblue.Authentication.Middlewares.Middleware
             {
                 new Claim(ClaimTypes.Name, $"IP: {ip}"),
                 new Claim(ClaimTypes.Role, "Application")
-            }, AuthScheme.InternalAuth);
+            }, AuthorizationScheme.InternalAuth);
         }
 
         private void AuthorizeApplicationViaAuthToken(HttpRequest request)
@@ -195,7 +193,7 @@ namespace Navyblue.Authentication.Middlewares.Middleware
                         {
                             new Claim(ClaimTypes.Name, tokenPiece[0]),
                             new Claim(ClaimTypes.Role, "Application")
-                        }, AuthScheme.InternalAuth);
+                        }, AuthorizationScheme.InternalAuth);
                     }
                 }
             }
@@ -203,7 +201,7 @@ namespace Navyblue.Authentication.Middlewares.Middleware
 
         private void AuthorizeUserViaBearerToken(HttpRequest request)
         {
-            this.Identity = this.accessTokenProtector.Unprotect(request.Headers[this.authConfig.AuthHeaderName]);
+            this.Identity = this.accessTokenProtector.Unprotect(request.Headers[this.authConfig.AuthHeaderName].ToString().Split(' ')[1]);
         }
 
         /// <summary>
@@ -220,7 +218,8 @@ namespace Navyblue.Authentication.Middlewares.Middleware
                 string content = "{}";
                 if (this._httpContext.Response != null)
                 {
-                    //content = httpContext.Response.ReadBodyAsStringAsync();
+                    StreamReader sr = new StreamReader(_httpContext.Response.Body);
+                    content = sr.ReadToEnd();
                 }
 
                 JObject jObject = JObject.Parse(content);
@@ -232,8 +231,6 @@ namespace Navyblue.Authentication.Middlewares.Middleware
                 this._httpContext.Response.Clear();
                 this._httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await this._httpContext.Response.WriteAsync(jObject.ToJson());
-
-                //httpContext.Response.Body = jObject.ToJson().ToStream(); //request.CreateResponse(response.StatusCode, jObject).Content;
             }
         }
 
@@ -250,6 +247,22 @@ namespace Navyblue.Authentication.Middlewares.Middleware
         private bool IsFromIPAllowedLists(HttpRequest request)
         {
             return this.IPAllowedLists != null && this.IPAllowedLists.Contains(request.Host.Host);
+        }
+    }
+
+    public class BasicAuthenticationOptions : AuthenticationSchemeOptions
+    {
+        public string Realm { get; set; }
+    }
+
+    public class BasicAuthenticationPostConfigureOptions : IPostConfigureOptions<BasicAuthenticationOptions>
+    {
+        public void PostConfigure(string name, BasicAuthenticationOptions options)
+        {
+            if (string.IsNullOrEmpty(options.Realm))
+            {
+                throw new InvalidOperationException("Realm must be provided in options");
+            }
         }
     }
 }

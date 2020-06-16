@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace Navyblue.Authentication
 {
-    public class AuthConfig
+    public class AuthorizationConfig
     {
         public bool UseSwaggerAsApplicationForDev { get; set; }
 

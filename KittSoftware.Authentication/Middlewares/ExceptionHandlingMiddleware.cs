@@ -21,7 +21,6 @@ namespace Navyblue.Authentication.Middlewares.Middleware
             IExceptionHandlerFeature ex = context.Features.Get<IExceptionHandlerFeature>();
             if (ex != null)
             {
-                //记录日志
                 this.logger.LogError(exception: ex.Error, ex.Error.Message,"NavyBlue.ExceptionHandlingExtensions");
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;

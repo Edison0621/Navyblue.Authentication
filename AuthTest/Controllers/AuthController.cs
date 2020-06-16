@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Navyblue.Authentication;
@@ -15,9 +16,8 @@ namespace AuthTest.Controllers
     /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
-    [ApiController]
     [Route("[controller]")]
-    public class AuthController : Controller
+    public class AuthController : BaseApiController
     {
         /// <summary>
         /// The jym access token protector
@@ -27,7 +27,7 @@ namespace AuthTest.Controllers
         /// <summary>
         /// The authentication configuration
         /// </summary>
-        private readonly AuthConfig _authConfig;
+        private readonly AuthorizationConfig _authConfig;
 
         /// <summary>
         /// The bearer authentication keys
@@ -38,7 +38,7 @@ namespace AuthTest.Controllers
         /// Initializes a new instance of the <see cref="AuthController"/> class.
         /// </summary>
         /// <param name="authConfigOptions">The authentication configuration options.</param>
-        public AuthController(IOptions<AuthConfig> authConfigOptions)
+        public AuthController(IOptions<AuthorizationConfig> authConfigOptions)
         {
             this._authConfig = authConfigOptions.Value;
             bearerAuthKeys = this._authConfig.BearerAuthKeys;
@@ -55,10 +55,11 @@ namespace AuthTest.Controllers
         /// </summary>
         /// <returns>IActionResult.</returns>
         [HttpGet]
+        [AllowAnonymous]
         [Route("GetAuthToken")]
         public IActionResult GetAuthToken()
         {
-            string authToken = this.BuildAuthToken(Guid.NewGuid().ToGuidString(), AuthScheme.Bearer);
+            string authToken = this.BuildAuthToken(Guid.NewGuid().ToGuidString(), AuthorizationScheme.Bearer);
             return this.Ok(authToken);
         }
 

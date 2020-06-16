@@ -23,7 +23,7 @@ namespace Navyblue.Authentication.Filters
         /// <summary>
         ///     Initializes a new instance of the <see cref="UserAuthorizeAttribute" /> class.
         /// </summary>
-        public UserAuthorizeAttribute(string schemes = AuthScheme.Bearer)
+        public UserAuthorizeAttribute(string schemes = AuthorizationScheme.Bearer)
         {
             this.Roles = "User";
             this.AuthenticationSchemes = schemes;

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Navyblue.Authentication;
 using Navyblue.Authentication.Middlewares;
+using Navyblue.Authorizations.Authorizations.NavyblueResult;
 
 namespace AuthTest
 {
@@ -49,10 +50,17 @@ namespace AuthTest
 
             services.AddOptions();
 
-            services.Configure<AuthConfig>(this.Configuration.GetSection("AuthConfig"));
+            //services.Configure<AuthorizationConfig>(this.Configuration.GetSection("AuthConfig"));
 
-            services.AddAuthentication(AuthScheme.Bearer)
-                .AddScheme<BasicAuthenticationOptions, NavyAuthenticationHandler>(AuthScheme.Bearer, null);
+            //services.AddAuthentication(AuthorizationScheme.Bearer)
+            //    .AddScheme<BasicAuthenticationOptions, NavyAuthenticationHandler>(AuthorizationScheme.Bearer, null);
+
+            //services.AddMvc(p =>
+            //{
+            //    p.Filters.Add(new NavyblueAuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
+            //});
+
+            services.AddBearerService(this.Configuration.GetSection("AuthConfig"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,8 +80,7 @@ namespace AuthTest
 
             app.UseRouting();
 
-            app.UseAuthorization();
-            //app.UseNavyblueAuthorization(app.ApplicationServices.GetService<IOptions<AuthConfig>>());
+            app.AddBearer();
 
             app.UseEndpoints(endpoints => endpoints.MapControllers());
 

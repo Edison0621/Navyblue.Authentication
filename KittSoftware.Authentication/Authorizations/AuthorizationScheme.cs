@@ -17,7 +17,7 @@ namespace Navyblue.Authentication
     /// <summary>
     ///     AuthScheme.
     /// </summary>
-    public static class AuthScheme
+    public static class AuthorizationScheme
     {
         /// <summary>
         ///     Basic
