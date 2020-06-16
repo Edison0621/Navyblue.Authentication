@@ -29,11 +29,6 @@ namespace Navyblue.Authentication.Middlewares
             return builder.UseMiddleware<JsonResponseWrapperMiddleware>();
         }
 
-        public static IApplicationBuilder UseNavyblueAuthorization(this IApplicationBuilder builder, IOptions<AuthConfig> authConfigOptions)
-        {
-            return builder.UseMiddleware<AuthorizationMiddleware>(authConfigOptions);
-        }
-
         public static IApplicationBuilder UseExceptionHandling(this IApplicationBuilder builder)
         {
             //ExceptionHandlerExtensions

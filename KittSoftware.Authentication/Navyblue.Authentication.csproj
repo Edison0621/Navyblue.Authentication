@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="Extensions\HttpConfigurationExtensions.cs" />
+    <Compile Remove="Middlewares\Middleware\AuthorizationMiddleware.cs" />
   </ItemGroup>
 
   <ItemGroup>

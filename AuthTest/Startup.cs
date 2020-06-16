@@ -52,7 +52,7 @@ namespace AuthTest
             services.Configure<AuthConfig>(this.Configuration.GetSection("AuthConfig"));
 
             services.AddAuthentication(AuthScheme.Bearer)
-                .AddScheme<BasicAuthenticationOptions, BasicAuthenticationHandler>(AuthScheme.Bearer, null);
+                .AddScheme<BasicAuthenticationOptions, NavyAuthenticationHandler>(AuthScheme.Bearer, null);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
