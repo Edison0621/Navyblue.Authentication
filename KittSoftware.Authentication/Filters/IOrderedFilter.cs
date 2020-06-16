@@ -1,4 +1,4 @@
-﻿// *****************************************************************************************************************
+// *****************************************************************************************************************
 // Project          : Navyblue
 // File             : IOrderedFilter.cs
 // Created          : 2019-01-14  17:14
@@ -21,15 +21,6 @@ namespace Navyblue.Authentication.Filters
     /// </summary>
     public class OrderedActionFilterAttribute : ActionFilterAttribute, IOrderedFilter
     {
-        #region IOrderedFilter Members
-
-        /// <summary>
-        ///     Gets or sets the order.
-        /// </summary>
-        /// <value>The order.</value>
-        public new int Order { get; set; }
-
-        #endregion IOrderedFilter Members
     }
 
     /// <summary>
@@ -41,7 +32,6 @@ namespace Navyblue.Authentication.Filters
 
         public virtual void OnAuthorization(AuthorizationFilterContext context)
         {
-            throw new NotImplementedException();
         }
 
         #endregion IAuthorizationFilter Members
@@ -62,14 +52,5 @@ namespace Navyblue.Authentication.Filters
     /// </summary>
     public class OrderedExceptionFilterAttribute : ExceptionFilterAttribute, IOrderedFilter
     {
-        #region IOrderedFilter Members
-
-        /// <summary>
-        ///     Gets or sets the order.
-        /// </summary>
-        /// <value>The order.</value>
-        public new int Order { get; set; }
-
-        #endregion IOrderedFilter Members
     }
 }
