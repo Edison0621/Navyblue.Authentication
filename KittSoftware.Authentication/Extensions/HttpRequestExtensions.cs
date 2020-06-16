@@ -23,7 +23,7 @@ using Microsoft.Net.Http.Headers;
 using Navyblue.BaseLibrary;
 using ReflectionMagic;
 
-namespace Navyblue.Authentication.Extensions
+namespace Navyblue.Authorization.Extensions
 {
     public static class HttpRequestExtensions
     {

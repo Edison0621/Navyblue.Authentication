@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Navyblue.BaseLibrary;
 
-namespace Navyblue.Authentication.Middlewares.Middleware
+namespace Navyblue.Authentication.Middlewares
 {
     public class TraceEntryMiddleware : INavyBlueMiddleware
     {

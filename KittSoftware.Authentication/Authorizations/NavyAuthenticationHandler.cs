@@ -31,7 +31,7 @@ using Navyblue.Authentication.Extensions;
 using Navyblue.BaseLibrary;
 using Newtonsoft.Json.Linq;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authentication.Authorizations
 {
     public class NavyAuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
     {

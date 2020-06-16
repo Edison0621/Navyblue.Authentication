@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Net;
 
-namespace Navyblue.Authentication.Filters
+namespace Navyblue.Authorization.Filters
 {
     /// <summary>
     ///     An action filter for checking whether the action parameter is null.

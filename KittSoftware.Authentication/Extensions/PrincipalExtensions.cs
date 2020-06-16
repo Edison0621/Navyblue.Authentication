@@ -14,7 +14,7 @@
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace Navyblue.Authentication.Extensions
+namespace Navyblue.Authorization.Extensions
 {
     /// <summary>
     ///     PrincipalExtensions.

@@ -13,7 +13,7 @@
 
 using System.Collections.Generic;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authorization
 {
     /// <summary>
     ///     Class JsonResponseMessage.

@@ -14,7 +14,7 @@
 
 using System.Collections.Generic;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authentication.Authorizations
 {
     public class AuthorizationConfig
     {

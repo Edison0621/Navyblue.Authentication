@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Navyblue.Authentication.Middlewares.Middleware
+namespace Navyblue.Authentication.Middlewares
 {
     public class ExceptionHandlingMiddleware:INavyBlueMiddleware
     {

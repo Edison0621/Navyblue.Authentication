@@ -18,7 +18,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using Navyblue.Authentication.Extensions;
 
-namespace Navyblue.Authentication.Filters
+namespace Navyblue.Authentication.Authorizations
 {
     /// <summary>
     ///     IPAuthorizeAttribute.

@@ -4,9 +4,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Navyblue.Authentication;
-using Navyblue.Authentication.Extensions;
-using Navyblue.Authentication.Filters;
+using Navyblue.Authentication.Authorizations;
+using Navyblue.Authorization;
+using Navyblue.Authorization.Extensions;
 using Navyblue.BaseLibrary;
 
 namespace AuthTest.Controllers
@@ -110,9 +110,6 @@ namespace AuthTest.Controllers
                 new Claim(ClaimTypes.Name, userIdentifier),
                 new Claim(ClaimTypes.Expiration, expirationSeconds==0? this.GetExpiryTimestamp().ToString():expirationSeconds.ToString())
             };
-
-            //ClaimsIdentity identity = new ClaimsIdentity(claims, schemeName);
-            //this.User = new ClaimsPrincipal(identity);
 
             return new ClaimsIdentity(claims, schemeName);
         }

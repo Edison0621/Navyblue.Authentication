@@ -5,12 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
-using Navyblue.Authorizations.Authorizations.CustomResult;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Navyblue.Authorizations.Authorizations.NavyblueResult
+namespace Navyblue.Authorization.Authorizations.NavyblueResult
 {
     public class NavyblueAuthorizationFilter : IAsyncAuthorizationFilter
     {

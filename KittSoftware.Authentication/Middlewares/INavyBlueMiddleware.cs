@@ -14,7 +14,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace Navyblue.Authentication.Middlewares.Middleware
+namespace Navyblue.Authentication.Middlewares
 {
     public interface INavyBlueMiddleware
     {

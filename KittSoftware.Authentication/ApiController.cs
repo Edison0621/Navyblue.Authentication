@@ -15,7 +15,7 @@ using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authorization
 {
     /// <summary>
     ///     ApiController.

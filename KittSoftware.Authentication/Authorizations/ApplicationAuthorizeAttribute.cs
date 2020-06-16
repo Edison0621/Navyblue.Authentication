@@ -14,7 +14,7 @@
 using Microsoft.AspNetCore.Authorization;
 using System;
 
-namespace Navyblue.Authentication.Filters
+namespace Navyblue.Authentication.Authorizations
 {
     /// <summary>
     ///     ApplicationAuthorizeAttribute.

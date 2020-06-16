@@ -12,7 +12,7 @@
 // ******************************************************************************************************
 
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authentication.Authorizations
 {
     /// <summary>
     ///     AuthScheme.

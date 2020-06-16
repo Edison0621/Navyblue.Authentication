@@ -12,16 +12,14 @@
 // ******************************************************************************************************
 
 
-using System;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Navyblue.Authorizations.Authorizations.NavyblueResult;
+using Navyblue.Authentication.Authorizations;
+using Navyblue.Authorization.Authorizations.NavyblueResult;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authentication.Extensions
 {
     public static class NavyAuthenticationExtensions
     {

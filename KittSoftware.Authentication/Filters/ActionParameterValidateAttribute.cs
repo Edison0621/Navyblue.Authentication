@@ -20,7 +20,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Navyblue.BaseLibrary;
 
-namespace Navyblue.Authentication.Filters
+namespace Navyblue.Authorization.Filters
 {
     /// <summary>
     ///     An action filter for validating action parameter, if validate failed, create a 400 response.

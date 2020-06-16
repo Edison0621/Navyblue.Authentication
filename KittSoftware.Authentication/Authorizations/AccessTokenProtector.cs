@@ -17,7 +17,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Navyblue.BaseLibrary;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authentication.Authorizations
 {
     /// <summary>
     ///     NBAccessTokenProtector.

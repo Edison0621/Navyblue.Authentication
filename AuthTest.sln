@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthTest", "AuthTest\AuthTest.csproj", "{938CB7BF-A987-4573-93E0-D7AF726AFCE2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Navyblue.Authorizations", "KittSoftware.Authentication\Navyblue.Authorizations.csproj", "{C45BB6B0-FAC9-4746-B52F-BC070AA3452C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Navyblue.Authorization", "KittSoftware.Authentication\Navyblue.Authorization.csproj", "{C45BB6B0-FAC9-4746-B52F-BC070AA3452C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

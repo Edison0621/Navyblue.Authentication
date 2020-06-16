@@ -18,7 +18,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Navyblue.BaseLibrary;
 
-namespace Navyblue.Authentication.Middlewares.Middleware
+namespace Navyblue.Authentication.Middlewares
 {
     public class JsonResponseWrapperMiddleware : INavyBlueMiddleware
     {

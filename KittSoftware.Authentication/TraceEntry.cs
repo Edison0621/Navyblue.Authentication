@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authorization
 {
     /// <summary>
     ///     TraceEntry.

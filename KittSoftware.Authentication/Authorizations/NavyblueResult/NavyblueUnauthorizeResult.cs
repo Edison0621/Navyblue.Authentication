@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Navyblue.Authorizations.Authorizations.NavyblueResult;
 
-namespace Navyblue.Authorizations.Authorizations.CustomResult
+namespace Navyblue.Authorization.Authorizations.NavyblueResult
 {
     public class NavyblueUnauthorizeResult : JsonResult
     {

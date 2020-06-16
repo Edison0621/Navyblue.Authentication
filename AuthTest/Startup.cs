@@ -1,17 +1,11 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using Navyblue.Authentication;
-using Navyblue.Authentication.Middlewares;
-using Navyblue.Authorizations.Authorizations.NavyblueResult;
+using Navyblue.Authentication.Extensions;
 
 namespace AuthTest
 {
@@ -49,16 +43,6 @@ namespace AuthTest
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Auth API", Version = "v1" }));
 
             services.AddOptions();
-
-            //services.Configure<AuthorizationConfig>(this.Configuration.GetSection("AuthConfig"));
-
-            //services.AddAuthentication(AuthorizationScheme.Bearer)
-            //    .AddScheme<BasicAuthenticationOptions, NavyAuthenticationHandler>(AuthorizationScheme.Bearer, null);
-
-            //services.AddMvc(p =>
-            //{
-            //    p.Filters.Add(new NavyblueAuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
-            //});
 
             services.AddBearerService(this.Configuration.GetSection("AuthConfig"));
         }

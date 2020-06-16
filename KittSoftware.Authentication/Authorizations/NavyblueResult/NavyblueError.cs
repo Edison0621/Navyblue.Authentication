@@ -1,4 +1,4 @@
-﻿namespace Navyblue.Authorizations.Authorizations.NavyblueResult
+﻿namespace Navyblue.Authorization.Authorizations.NavyblueResult
 {
     public class NavyblueError
     {

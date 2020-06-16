@@ -16,7 +16,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 
-namespace Navyblue.Authentication.Filters
+namespace Navyblue.Authorization.Filters
 {
     /// <summary>
     ///     Determines whether the specified value of the object is valid.

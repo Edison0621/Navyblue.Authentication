@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\KittSoftware.Authentication\Navyblue.Authorizations.csproj" />
+    <ProjectReference Include="..\KittSoftware.Authentication\Navyblue.Authorization.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

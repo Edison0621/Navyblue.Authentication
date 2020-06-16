@@ -17,7 +17,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authentication.Filters
 {
     /// <summary>
     ///     Class AvailableValuesAttribute.

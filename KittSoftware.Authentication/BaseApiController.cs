@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Serialization;
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authorization
 {
     /// <summary>
     ///     BaseApiController.

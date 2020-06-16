@@ -14,7 +14,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 
-namespace Navyblue.Authentication.Filters
+namespace Navyblue.Authorization.Filters
 {
     /// <summary>
     ///     Class OrderedActionFilterAttribute.

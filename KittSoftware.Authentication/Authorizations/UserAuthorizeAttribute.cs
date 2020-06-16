@@ -13,7 +13,7 @@
 
 using Microsoft.AspNetCore.Authorization;
 
-namespace Navyblue.Authentication.Filters
+namespace Navyblue.Authentication.Authorizations
 {
     /// <summary>
     ///     UserAuthorizeAttribute.

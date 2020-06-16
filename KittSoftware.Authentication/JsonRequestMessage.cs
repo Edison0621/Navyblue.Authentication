@@ -11,7 +11,7 @@
 // </copyright>
 // *****************************************************************************************************************
 
-namespace Navyblue.Authentication
+namespace Navyblue.Authorization
 {
     /// <summary>
     ///     Class JsonRequestMessage.
