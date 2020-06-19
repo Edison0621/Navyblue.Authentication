@@ -89,7 +89,7 @@ public class AuthorizationController : AuthApiController
     "MobileSignInExpirationSeconds": 86400
   }
 ```
-**When use this in your project, you should use another BearerAuthKeys**
+**When use this package in your project, you should use another private key to replace the exsit key in BearerAuthKeys**
 # Release Note
 - 1.0.2
 
