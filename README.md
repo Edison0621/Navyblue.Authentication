@@ -89,6 +89,7 @@ public class AuthorizationController : AuthApiController
     "MobileSignInExpirationSeconds": 86400
   }
 ```
+**When use this in your project, you should use another BearerAuthKeys**
 # Release Note
 - 1.0.2
 
