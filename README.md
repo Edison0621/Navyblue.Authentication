@@ -1,6 +1,9 @@
 # Navyblue.Authentication
 The package is for developer to create auth function module, you just only need to configure little information and then your api will be protected by this package.
 
+# Install
+Install-Package Navyblue.Authentication
+
 # Detals
 - Setting user identifier is '111111111111111111111111111111111'
 ![sample](/Images/sample.png)
@@ -26,7 +29,7 @@ services.AddBearerService(this.Configuration.GetSection("NavyAuthorizationConfig
 ```
 app.AddBearer();
 ```
-- Add AuthorizationController and inherits AuthApiController
+- Add AuthorizationController and inherits AuthApiController, Also you can custom your own 'AuthorizationController'
 ```
 /// <summary>
 /// Class AuthController.
@@ -34,7 +37,7 @@ app.AddBearer();
 /// </summary>
 /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
 [Route("[controller]")]
-public class AuthController : AuthApiController
+public class AuthorizationController : AuthApiController
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="AuthController"/> class.
