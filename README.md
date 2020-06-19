@@ -88,10 +88,13 @@ public class AuthController : AuthApiController
 ```
 # Release Note
 - 1.0.2
+
 Add [ApiController] to AuthApiController as default setting
 
 - 1.0.1
+
 Abstract token generating to AuthApiController
 
 - 1.0.0
+
 Initial project
