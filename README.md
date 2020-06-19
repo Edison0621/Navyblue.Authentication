@@ -2,11 +2,17 @@
 The package is for developer to create auth function module, you just only need to configure little information and then your api will be protected by this package.
 
 # Detals
+- Setting user identifier is '111111111111111111111111111111111'
+![sample](/Images/sample.png)
+
 - Getting token
 ![gettoken](/Images/gettoken.png)
 
 - Validate
 ![validate](/Images/validate.png)
+
+- Validate2, we will get the user identifier
+![validate2](/Images/validate2.png)
 
 - Forbid
 ![validate](/Images/error.png)
@@ -47,7 +53,7 @@ public class AuthController : AuthApiController
     [Route("GetAuthToken")]
     public IActionResult GetAuthToken()
     {
-        string userIdentify = Guid.NewGuid().ToGuidString();
+        string userIdentify = "111111111111111111111111111111111";
         string authToken = this.BuildAuthToken(userIdentify, AuthorizationScheme.Bearer);
         return this.Ok(authToken);
     }

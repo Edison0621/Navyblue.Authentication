@@ -36,7 +36,7 @@ namespace AuthTest.Controllers
         [Route("GetAuthToken")]
         public IActionResult GetAuthToken()
         {
-            string userIdentify = Guid.NewGuid().ToGuidString();
+            string userIdentify = "111111111111111111111111111111111";
             string authToken = this.BuildAuthToken(userIdentify, AuthorizationScheme.Bearer);
             return this.Ok(authToken);
         }
@@ -50,7 +50,7 @@ namespace AuthTest.Controllers
         [Route("TestAuthToken")]
         public IActionResult TestAuthToken()
         {
-            return this.Ok("Tested");
+            return this.Ok(this.User.Identity.Name);
         }
     }
 }
