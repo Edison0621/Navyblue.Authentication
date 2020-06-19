@@ -47,5 +47,16 @@ namespace AuthSample.Controllers
         {
             return this.Ok(this.User.Identity.Name);
         }
+
+        /// <summary>
+        /// Gets the authentication token.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
+        [HttpGet]
+        [Route("NonAuthTest")]
+        public IActionResult NonAuthTest()
+        {
+            return this.Ok(this.User.Identity.Name);
+        }
     }
 }

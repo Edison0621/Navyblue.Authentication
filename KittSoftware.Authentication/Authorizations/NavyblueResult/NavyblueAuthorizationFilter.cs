@@ -31,6 +31,11 @@ namespace Navyblue.Authorization.Authorizations.NavyblueResult
                 return;
             }
 
+            if (!context.ActionDescriptor.EndpointMetadata.Any(p => p is AuthorizeAttribute))
+            {
+                return;
+            }
+
             IPolicyEvaluator policyEvaluator = context.HttpContext.RequestServices.GetRequiredService<IPolicyEvaluator>();
             AuthenticateResult authenticateResult = await policyEvaluator.AuthenticateAsync(this._policy, context.HttpContext);
             PolicyAuthorizationResult authorizeResult = await policyEvaluator.AuthorizeAsync(this._policy, authenticateResult, context.HttpContext, context);
