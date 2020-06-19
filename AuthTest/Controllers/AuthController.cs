@@ -17,23 +17,15 @@ namespace AuthTest.Controllers
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
     [Route("[controller]")]
-    public class AuthController : BaseApiController
+    public class AuthController : AuthApiController
     {
-        private static readonly Lazy<AccessTokenProtector> accessTokenProtector = new Lazy<AccessTokenProtector>(() => InitAccessTokenProtector());
-        private readonly AuthorizationConfig _authConfig;
-        private static string bearerAuthKeys;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthController"/> class.
         /// </summary>
         /// <param name="authConfigOptions">The authentication configuration options.</param>
-        public AuthController(IOptions<AuthorizationConfig> authConfigOptions)
+        public AuthController(IOptions<AuthorizationConfig> authConfigOptions):base(authConfigOptions)
         {
-            this._authConfig = authConfigOptions.Value;
-            bearerAuthKeys = this._authConfig.BearerAuthKeys;
         }
-
-        private AccessTokenProtector AccessTokenProtector => accessTokenProtector.Value;
 
         /// <summary>
         /// Gets the authentication token.
@@ -44,7 +36,8 @@ namespace AuthTest.Controllers
         [Route("GetAuthToken")]
         public IActionResult GetAuthToken()
         {
-            string authToken = this.BuildAuthToken(Guid.NewGuid().ToGuidString(), AuthorizationScheme.Bearer);
+            string userIdentify = Guid.NewGuid().ToGuidString();
+            string authToken = this.BuildAuthToken(userIdentify, AuthorizationScheme.Bearer);
             return this.Ok(authToken);
         }
 
@@ -58,66 +51,6 @@ namespace AuthTest.Controllers
         public IActionResult TestAuthToken()
         {
             return this.Ok("Tested");
-        }
-
-        /// <summary>
-        /// Builds the authentication token.
-        /// </summary>
-        /// <param name="userIdentifier">The user identifier.</param>
-        /// <param name="schemeName">Name of the scheme.</param>
-        /// <returns>System.String.</returns>
-        protected string BuildAuthToken(string userIdentifier, string schemeName)
-        {
-            ClaimsIdentity identity = this.BuildPrincipal(userIdentifier, schemeName);
-            return this.AccessTokenProtector.Protect(identity);
-        }
-
-        /// <summary>
-        /// Initializes the jym access token protector.
-        /// </summary>
-        /// <returns>AccessTokenProtector.</returns>
-        private static AccessTokenProtector InitAccessTokenProtector()
-        {
-            return new AccessTokenProtector(bearerAuthKeys.HtmlDecode());
-        }
-
-        /// <summary>
-        /// Builds the principal.
-        /// </summary>
-        /// <param name="userIdentifier">The user identifier.</param>
-        /// <param name="schemeName">Name of the scheme.</param>
-        /// <param name="expirationSeconds">The expiration seconds.</param>
-        /// <returns>ClaimsIdentity.</returns>
-        protected ClaimsIdentity BuildPrincipal(string userIdentifier, string schemeName, int expirationSeconds = 0)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, userIdentifier),//TODO: you can add other property
-                new Claim(ClaimTypes.Expiration, expirationSeconds==0? this.GetExpiryTimestamp().ToString():expirationSeconds.ToString())
-            };
-
-            return new ClaimsIdentity(claims, schemeName);
-        }
-
-        /// <summary>
-        /// Gets the expiry timestamp. 901 is Android， 902 is IOS
-        /// How long the token will be effective
-        /// </summary>
-        /// <returns>System.Int64.</returns>
-        protected long GetExpiryTimestamp()
-        {
-            int duration = this._authConfig.PCSignInExpirationSeconds;
-            TraceEntry traceEntry = this.Request.GetTraceEntry();
-            if (traceEntry.ClientId.Contains(_authConfig.IOSClientId) || traceEntry.ClientId.Contains(_authConfig.AndroidClientId))
-            {
-                duration = this._authConfig.AppSignInExpirationSeconds;
-            }
-            else if (HttpRequestExtensions.IsFromMobileDevice(this.HttpContext))
-            {
-                duration = this._authConfig.MobileSignInExpirationSeconds;
-            }
-
-            return DateTime.UtcNow.Add(duration.Seconds()).UnixTimestamp();
         }
     }
 }

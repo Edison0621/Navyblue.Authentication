@@ -14,6 +14,8 @@
 using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Navyblue.Authorization
 {
@@ -21,8 +23,17 @@ namespace Navyblue.Authorization
     ///     ApiController.
     /// </summary>
     [ApiController]
-    public abstract class ApiController : BaseApiController
+    public abstract class ApiController: Controller
     {
+        /// <summary>
+        ///     Gets the logger.
+        /// </summary>
+        /// <value>The logger.</value>
+        public ITraceWriter Logger
+        {
+            get { return this.HttpContext.RequestServices.GetService<ITraceWriter>(); }
+        }
+
         /// <summary>
         ///     Provides a set of methods and properties that help debug your code with the specified writer, request, exception, message format and argument.
         /// </summary>
