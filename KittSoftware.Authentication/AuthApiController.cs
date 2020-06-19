@@ -25,6 +25,7 @@ namespace Navyblue.Authorization
     /// <summary>
     ///     BaseApiController.
     /// </summary>
+    [ApiController]
     public abstract class AuthApiController : Controller
     {
         private static readonly Lazy<AccessTokenProtector> accessTokenProtector = new Lazy<AccessTokenProtector>(() => InitAccessTokenProtector());
