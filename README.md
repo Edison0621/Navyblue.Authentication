@@ -70,14 +70,14 @@ public class AuthorizationController : AuthApiController
     [Route("TestAuthToken")]
     public IActionResult TestAuthToken()
     {
-        return this.Ok("Tested");
+        return this.Ok(this.User.Identity.Name);
     }
 }
 ```
 - The configuration structure like this:
 ```
   "NavyAuthorizationConfig": {
-    "AuthHeaderName": "x-authentication",
+    "AuthHeaderName": "X-Authentication",
     "AndroidClientId": "901",
     "IOSClientId": "902",
     "UseSwaggerAsApplicationForDev": "false",
