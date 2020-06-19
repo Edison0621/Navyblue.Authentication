@@ -38,10 +38,7 @@ namespace Navyblue.Authentication.Extensions
             services.AddAuthentication(AuthorizationScheme.Bearer)
                 .AddScheme<BasicAuthenticationOptions, NavyAuthenticationHandler>(AuthorizationScheme.Bearer, null);
 
-            services.AddMvc(p =>
-            {
-                p.Filters.Add(new NavyblueAuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build()));
-            });
+            services.AddMvc(p => p.Filters.Add(new NavyblueAuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())));
 
             return services;
         }

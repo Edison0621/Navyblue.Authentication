@@ -36,7 +36,7 @@ namespace Navyblue.Authorization
         /// Initializes a new instance of the <see cref="AuthController"/> class.
         /// </summary>
         /// <param name="authConfigOptions">The authentication configuration options.</param>
-        public AuthApiController(IOptions<AuthorizationConfig> authConfigOptions)
+        protected AuthApiController(IOptions<AuthorizationConfig> authConfigOptions)
         {
             this._authConfig = authConfigOptions.Value;
             bearerAuthKeys = this._authConfig.BearerAuthKeys;
@@ -83,7 +83,7 @@ namespace Navyblue.Authorization
         {
             int duration = this._authConfig.PCSignInExpirationSeconds;
             TraceEntry traceEntry = this.Request.GetTraceEntry();
-            if (traceEntry.ClientId.Contains(_authConfig.IOSClientId) || traceEntry.ClientId.Contains(_authConfig.AndroidClientId))
+            if (traceEntry.ClientId.Contains(this._authConfig.IOSClientId) || traceEntry.ClientId.Contains(this._authConfig.AndroidClientId))
             {
                 duration = this._authConfig.AppSignInExpirationSeconds;
             }

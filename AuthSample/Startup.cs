@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Navyblue.Authentication.Extensions;
 
-namespace AuthTest
+namespace AuthSample
 {
     /// <summary>
     /// Class Startup.

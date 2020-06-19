@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -33,8 +32,8 @@ namespace Navyblue.Authorization.Authorizations.NavyblueResult
             }
 
             IPolicyEvaluator policyEvaluator = context.HttpContext.RequestServices.GetRequiredService<IPolicyEvaluator>();
-            AuthenticateResult authenticateResult = await policyEvaluator.AuthenticateAsync(_policy, context.HttpContext);
-            PolicyAuthorizationResult authorizeResult = await policyEvaluator.AuthorizeAsync(_policy, authenticateResult, context.HttpContext, context);
+            AuthenticateResult authenticateResult = await policyEvaluator.AuthenticateAsync(this._policy, context.HttpContext);
+            PolicyAuthorizationResult authorizeResult = await policyEvaluator.AuthorizeAsync(this._policy, authenticateResult, context.HttpContext, context);
 
             if(authorizeResult.Challenged)
             {
@@ -42,7 +41,7 @@ namespace Navyblue.Authorization.Authorizations.NavyblueResult
             }
             else if(authorizeResult.Forbidden)
             {
-                context.Result = new ForbidResult(_policy.AuthenticationSchemes.ToArray());
+                context.Result = new ForbidResult(this._policy.AuthenticationSchemes.ToArray());
             }
         }
     }

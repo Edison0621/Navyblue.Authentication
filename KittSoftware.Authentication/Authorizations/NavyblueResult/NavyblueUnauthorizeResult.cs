@@ -7,7 +7,7 @@ namespace Navyblue.Authorization.Authorizations.NavyblueResult
     {
         public NavyblueUnauthorizeResult(string message):base(new NavyblueError(message))
         {
-            StatusCode = StatusCodes.Status403Forbidden;
+            this.StatusCode = StatusCodes.Status403Forbidden;
         }
     }
 }

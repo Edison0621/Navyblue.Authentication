@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Navyblue.Authentication.Authorizations;
 using Navyblue.Authorization;
-using Navyblue.Authorization.Extensions;
-using Navyblue.BaseLibrary;
 
-namespace AuthTest.Controllers
+namespace AuthSample.Controllers
 {
     /// <summary>
     /// Class AuthController.

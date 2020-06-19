@@ -27,7 +27,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using Navyblue.Authentication.Extensions;
 using Navyblue.Authorization.Extensions;
 using Navyblue.BaseLibrary;
 using Newtonsoft.Json.Linq;
@@ -219,7 +218,7 @@ namespace Navyblue.Authentication.Authorizations
                 string content = "{}";
                 if (this._httpContext.Response != null)
                 {
-                    StreamReader sr = new StreamReader(_httpContext.Response.Body);
+                    StreamReader sr = new StreamReader(this._httpContext.Response.Body);
                     content = sr.ReadToEnd();
                 }
 
