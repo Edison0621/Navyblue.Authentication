@@ -20,6 +20,51 @@ services.AddBearerService(this.Configuration.GetSection("NavyAuthorizationConfig
 ```
 app.AddBearer();
 ```
+- Add AuthorizationController and inherits AuthApiController
+```
+/// <summary>
+/// Class AuthController.
+/// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
+/// </summary>
+/// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
+[Route("[controller]")]
+public class AuthController : AuthApiController
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthController"/> class.
+    /// </summary>
+    /// <param name="authConfigOptions">The authentication configuration options.</param>
+    public AuthController(IOptions<AuthorizationConfig> authConfigOptions):base(authConfigOptions)
+    {
+    }
+
+    /// <summary>
+    /// Gets the authentication token.
+    /// </summary>
+    /// <returns>IActionResult.</returns>
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("GetAuthToken")]
+    public IActionResult GetAuthToken()
+    {
+        string userIdentify = Guid.NewGuid().ToGuidString();
+        string authToken = this.BuildAuthToken(userIdentify, AuthorizationScheme.Bearer);
+        return this.Ok(authToken);
+    }
+
+    /// <summary>
+    /// Gets the authentication token.
+    /// </summary>
+    /// <returns>IActionResult.</returns>
+    [HttpGet]
+    [UserAuthorize]
+    [Route("TestAuthToken")]
+    public IActionResult TestAuthToken()
+    {
+        return this.Ok("Tested");
+    }
+}
+```
 - The configuration structure like this:
 ```
   "NavyAuthorizationConfig": {
