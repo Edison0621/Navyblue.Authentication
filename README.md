@@ -29,8 +29,6 @@ services.AddBearerService(this.Configuration.GetSection("NavyAuthorizationConfig
 ```
 app.AddBearer();
 ```
-- Add AuthorizationController and inherits AuthApiController, Also you can custom your own 'AuthorizationController'
-```
 - Any Actions you want to protect
 ```
 [UserAuthorize]
@@ -39,7 +37,8 @@ public IActionResult GetUserInfo()
     //your code
 }
 ```
-
+- Add AuthorizationController and inherits AuthApiController, Also you can custom your own 'AuthorizationController'
+```
 /// <summary>
 /// Class AuthController.
 /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
