@@ -31,6 +31,15 @@ app.AddBearer();
 ```
 - Add AuthorizationController and inherits AuthApiController, Also you can custom your own 'AuthorizationController'
 ```
+- Any Actions you want to protect
+```
+[UserAuthorize]
+public IActionResult GetUserInfo()
+{
+    //your code
+}
+```
+
 /// <summary>
 /// Class AuthController.
 /// Implements the <see cref="Microsoft.AspNetCore.Mvc.Controller" />
