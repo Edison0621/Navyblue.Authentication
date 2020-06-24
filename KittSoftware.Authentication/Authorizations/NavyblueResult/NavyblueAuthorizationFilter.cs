@@ -12,11 +12,11 @@ namespace Navyblue.Authorization.Authorizations.NavyblueResult
 {
     public class NavyblueAuthorizationFilter : IAsyncAuthorizationFilter
     {
-        public AuthorizationPolicy _policy;
+        public readonly AuthorizationPolicy policy;
 
         public NavyblueAuthorizationFilter(AuthorizationPolicy policy)
         {
-            this._policy = policy ?? throw new ArgumentNullException(nameof(policy) + "is null");
+            this.policy = policy ?? throw new ArgumentNullException(nameof(policy) + "is null");
         }
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
@@ -37,16 +37,16 @@ namespace Navyblue.Authorization.Authorizations.NavyblueResult
             }
 
             IPolicyEvaluator policyEvaluator = context.HttpContext.RequestServices.GetRequiredService<IPolicyEvaluator>();
-            AuthenticateResult authenticateResult = await policyEvaluator.AuthenticateAsync(this._policy, context.HttpContext);
-            PolicyAuthorizationResult authorizeResult = await policyEvaluator.AuthorizeAsync(this._policy, authenticateResult, context.HttpContext, context);
+            AuthenticateResult authenticateResult = await policyEvaluator.AuthenticateAsync(this.policy, context.HttpContext);
+            PolicyAuthorizationResult authorizeResult = await policyEvaluator.AuthorizeAsync(this.policy, authenticateResult, context.HttpContext, context);
 
             if(authorizeResult.Challenged)
             {
-                context.Result = new NavyblueUnauthorizeResult("Authorization Failed");
+                context.Result = new NavyblueUnAuthorizeResult("Authorization Failed");
             }
             else if(authorizeResult.Forbidden)
             {
-                context.Result = new ForbidResult(this._policy.AuthenticationSchemes.ToArray());
+                context.Result = new ForbidResult(this.policy.AuthenticationSchemes.ToArray());
             }
         }
     }

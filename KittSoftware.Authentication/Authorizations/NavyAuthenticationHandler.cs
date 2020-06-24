@@ -140,6 +140,7 @@ namespace Navyblue.Authentication.Authorizations
 
             ClaimsPrincipal principal = new ClaimsPrincipal(this.Identity);
             AuthenticationTicket ticket = new AuthenticationTicket(principal, this.Scheme.Name);
+
             return AuthenticateResult.Success(ticket);
         }
 
@@ -201,7 +202,7 @@ namespace Navyblue.Authentication.Authorizations
 
         private void AuthorizeUserViaBearerToken(HttpRequest request)
         {
-            this.Identity = this.accessTokenProtector.Unprotect(request.Headers[this.authConfig.AuthHeaderName].ToString().Split(' ')[1]);
+            this.Identity = this.accessTokenProtector.Unprotect(request.Headers[this.authConfig.AuthHeaderName].ToString().Remove(0, this.Scheme.Name.Length + 1));
         }
 
         /// <summary>

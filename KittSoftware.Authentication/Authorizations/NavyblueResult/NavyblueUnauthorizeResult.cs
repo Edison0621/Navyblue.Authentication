@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Navyblue.Authorization.Authorizations.NavyblueResult
 {
-    public class NavyblueUnauthorizeResult : JsonResult
+    public class NavyblueUnAuthorizeResult : JsonResult
     {
-        public NavyblueUnauthorizeResult(string message):base(new NavyblueError(message))
+        public NavyblueUnAuthorizeResult(string message):base(new NavyblueError(message))
         {
-            this.StatusCode = StatusCodes.Status403Forbidden;
+            this.StatusCode = StatusCodes.Status401Unauthorized;
         }
     }
 }
