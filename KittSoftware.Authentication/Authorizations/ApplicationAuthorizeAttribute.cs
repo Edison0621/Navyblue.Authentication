@@ -25,9 +25,15 @@ namespace Navyblue.Authentication.Authorizations
         /// <summary>
         ///     Initializes a new instance of the <see cref="ApplicationAuthorizeAttribute" /> class.
         /// </summary>
-        public ApplicationAuthorizeAttribute()
+        public ApplicationAuthorizeAttribute():this(AuthorizationScheme.Bearer)
         {
             this.Roles = "Application";
+            this.AuthenticationSchemes = AuthorizationScheme.Bearer;
         }
-    }
+
+        private ApplicationAuthorizeAttribute(string schemes)
+        {
+
+        }
+}
 }
