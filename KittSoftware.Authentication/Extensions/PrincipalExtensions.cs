@@ -14,48 +14,47 @@
 using System.Security.Claims;
 using System.Security.Principal;
 
-namespace Navyblue.Authorization.Extensions
+namespace Navyblue.Authorization.Extensions;
+
+/// <summary>
+///     PrincipalExtensions.
+/// </summary>
+public static class PrincipalExtensions
 {
     /// <summary>
-    ///     PrincipalExtensions.
+    ///     Determines whether the specified principal is application.
     /// </summary>
-    public static class PrincipalExtensions
+    /// <param name="principal">The principal.</param>
+    /// <returns><c>true</c> if the specified principal is application; otherwise, <c>false</c>.</returns>
+    public static bool IsApplication(this IPrincipal principal)
     {
-        /// <summary>
-        ///     Determines whether the specified principal is application.
-        /// </summary>
-        /// <param name="principal">The principal.</param>
-        /// <returns><c>true</c> if the specified principal is application; otherwise, <c>false</c>.</returns>
-        public static bool IsApplication(this IPrincipal principal)
+        return principal.IsRole("Application");
+    }
+
+    /// <summary>
+    ///     Determines whether the specified principal is role.
+    /// </summary>
+    /// <param name="principal">The principal.</param>
+    /// <param name="roleName">Name of the role.</param>
+    /// <returns>System.Boolean.</returns>
+    public static bool IsRole(this IPrincipal principal, string roleName)
+    {
+        ClaimsPrincipal claimsPrincipal = principal as ClaimsPrincipal;
+        if (claimsPrincipal?.Identity is ClaimsIdentity claimsIdentity)
         {
-            return principal.IsRole("Application");
+            return claimsIdentity.HasClaim(ClaimTypes.Role, roleName);
         }
 
-        /// <summary>
-        ///     Determines whether the specified principal is role.
-        /// </summary>
-        /// <param name="principal">The principal.</param>
-        /// <param name="roleName">Name of the role.</param>
-        /// <returns>System.Boolean.</returns>
-        public static bool IsRole(this IPrincipal principal, string roleName)
-        {
-            ClaimsPrincipal claimsPrincipal = principal as ClaimsPrincipal;
-            if (claimsPrincipal?.Identity is ClaimsIdentity claimsIdentity)
-            {
-                return claimsIdentity.HasClaim(ClaimTypes.Role, roleName);
-            }
+        return false;
+    }
 
-            return false;
-        }
-
-        /// <summary>
-        ///     Determines whether the specified principal is user.
-        /// </summary>
-        /// <param name="principal">The principal.</param>
-        /// <returns>System.Boolean.</returns>
-        public static bool IsUser(this IPrincipal principal)
-        {
-            return principal.IsRole("User");
-        }
+    /// <summary>
+    ///     Determines whether the specified principal is user.
+    /// </summary>
+    /// <param name="principal">The principal.</param>
+    /// <returns>System.Boolean.</returns>
+    public static bool IsUser(this IPrincipal principal)
+    {
+        return principal.IsRole("User");
     }
 }

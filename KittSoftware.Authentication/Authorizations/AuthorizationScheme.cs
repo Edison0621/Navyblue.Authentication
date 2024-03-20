@@ -12,36 +12,35 @@
 // ******************************************************************************************************
 
 
-namespace Navyblue.Authentication.Authorizations
+namespace Navyblue.Authorization.Authorizations;
+
+/// <summary>
+///     AuthScheme.
+/// </summary>
+public static class AuthorizationScheme
 {
     /// <summary>
-    ///     AuthScheme.
+    ///     Basic
     /// </summary>
-    public static class AuthorizationScheme
-    {
-        /// <summary>
-        ///     Basic
-        /// </summary>
-        public const string Basic = "Basic";
+    public const string BASIC = "Basic";
 
-        /// <summary>
-        ///     Bearer
-        /// </summary>
-        public const string Bearer = "Bearer";
+    /// <summary>
+    ///     Bearer
+    /// </summary>
+    public const string BEARER = "Bearer";
 
-        /// <summary>
-        ///     The internal authentication
-        /// </summary>
-        public const string InternalAuth = "InternalAuth";
+    /// <summary>
+    ///     The internal authentication
+    /// </summary>
+    public const string INTERNAL_AUTH = "InternalAuth";
 
-        /// <summary>
-        ///     Quick
-        /// </summary>
-        public const string Quick = "Quick";
+    /// <summary>
+    ///     Quick
+    /// </summary>
+    public const string QUICK = "Quick";
 
-        /// <summary>
-        ///     Wechat
-        /// </summary>
-        public const string Wechat = "Wechat";
-    }
+    /// <summary>
+    ///     Wechat
+    /// </summary>
+    public const string WECHAT = "Wechat";
 }

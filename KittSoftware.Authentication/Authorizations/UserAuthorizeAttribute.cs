@@ -13,25 +13,24 @@
 
 using Microsoft.AspNetCore.Authorization;
 
-namespace Navyblue.Authentication.Authorizations
+namespace Navyblue.Authorization.Authorizations;
+
+/// <summary>
+///     UserAuthorizeAttribute.
+/// </summary>
+public class UserAuthorizeAttribute : AuthorizeAttribute
 {
     /// <summary>
-    ///     UserAuthorizeAttribute.
+    ///     Initializes a new instance of the <see cref="UserAuthorizeAttribute" /> class.
     /// </summary>
-    public class UserAuthorizeAttribute : AuthorizeAttribute
+    public UserAuthorizeAttribute():this(AuthorizationScheme.BEARER)
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="UserAuthorizeAttribute" /> class.
-        /// </summary>
-        public UserAuthorizeAttribute():this(AuthorizationScheme.Bearer)
-        {
-            this.Roles = "User";
-            this.AuthenticationSchemes = AuthorizationScheme.Bearer;
-        }
+        this.Roles = "User";
+        this.AuthenticationSchemes = AuthorizationScheme.BEARER;
+    }
 
-        private UserAuthorizeAttribute(string schemes)
-        {
+    private UserAuthorizeAttribute(string schemes)
+    {
 
-        }
     }
 }

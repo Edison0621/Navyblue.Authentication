@@ -17,97 +17,96 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Navyblue.BaseLibrary;
 
-namespace Navyblue.Authentication.Authorizations
+namespace Navyblue.Authorization.Authorizations;
+
+/// <summary>
+///     NBAccessTokenProtector.
+/// </summary>
+public sealed class AccessTokenProtector
 {
+    private const string Anonymous = "Anonymous";
+    private const string CRYPTO_SERVICE_PROVIDER_ERROR_MESSAGE = "AccessTokenProtector RSACryptoServiceProvider can not initialize. The key may be in bad format. Key: {0}";
+    private const string Unspecified = "Unspecified";
+
     /// <summary>
-    ///     NBAccessTokenProtector.
+    ///     The RSA crypto service provider
     /// </summary>
-    public sealed class AccessTokenProtector
+    private readonly RSACryptoServiceProvider _rsaCryptoServiceProvider;
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="AccessTokenProtector" /> class.
+    /// </summary>
+    /// <param name="key">The cryptographic key.</param>
+    public AccessTokenProtector(string key)
     {
-        private const string Anonymous = "Anonymous";
-        private const string CRYPTO_SERVICE_PROVIDER_ERROR_MESSAGE = "AccessTokenProtector RSACryptoServiceProvider can not initialize. The key may be in bad format. Key: {0}";
-        private const string Unspecified = "Unspecified";
-
-        /// <summary>
-        ///     The RSA crypto service provider
-        /// </summary>
-        private readonly RSACryptoServiceProvider rsaCryptoServiceProvider;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="AccessTokenProtector" /> class.
-        /// </summary>
-        /// <param name="key">The cryptographic key.</param>
-        public AccessTokenProtector(string key)
+        try
         {
-            try
-            {
-                this.rsaCryptoServiceProvider = new RSACryptoServiceProvider();
-                this.rsaCryptoServiceProvider.FromXmlString(key);
-            }
-            catch (Exception e)
-            {
-                throw new Exception(CRYPTO_SERVICE_PROVIDER_ERROR_MESSAGE.FormatWith(key), e);
-            }
+            this._rsaCryptoServiceProvider = new RSACryptoServiceProvider();
+            this._rsaCryptoServiceProvider.FromXmlString(key);
+        }
+        catch (Exception e)
+        {
+            throw new Exception(CRYPTO_SERVICE_PROVIDER_ERROR_MESSAGE.FormatWith(key), e);
+        }
+    }
+
+    /// <summary>
+    ///     Protects the specified identity.
+    /// </summary>
+    /// <param name="identity">The identity.</param>
+    /// <returns>System.String.</returns>
+    public string Protect(ClaimsIdentity identity)
+    {
+        if (identity == null)
+        {
+            throw new ArgumentNullException(nameof(identity));
         }
 
-        /// <summary>
-        ///     Protects the specified identity.
-        /// </summary>
-        /// <param name="identity">The identity.</param>
-        /// <returns>System.String.</returns>
-        public string Protect(ClaimsIdentity identity)
+        string name = identity.Name ?? Anonymous;
+        Claim claim = identity.FindFirst(ClaimTypes.Expiration);
+        long timestamp = claim?.Value.AsLong() ?? DateTime.UtcNow.UnixTimestamp();
+        string scheme = identity.AuthenticationType ?? Unspecified;
+        string payload = $"{name},{timestamp},{scheme}";
+
+        return this._rsaCryptoServiceProvider.Encrypt(payload.GetBytesOfASCII(), false).ToBase64String();
+    }
+
+    /// <summary>
+    ///     Unprotects the specified protected data.
+    /// </summary>
+    /// <param name="protectedData">The protected data.</param>
+    /// <returns>System.Security.Claims.ClaimsIdentity.</returns>
+    public ClaimsIdentity Unprotect(string protectedData)
+    {
+        if (protectedData == null)
         {
-            if (identity == null)
-            {
-                throw new ArgumentNullException(nameof(identity));
-            }
-
-            string name = identity.Name ?? Anonymous;
-            Claim claim = identity.FindFirst(ClaimTypes.Expiration);
-            long timestamp = claim?.Value?.AsLong() ?? DateTime.UtcNow.UnixTimestamp();
-            string scheme = identity.AuthenticationType ?? Unspecified;
-            string payload = $"{name},{timestamp},{scheme}";
-
-            return this.rsaCryptoServiceProvider.Encrypt(payload.GetBytesOfASCII(), false).ToBase64String();
+            throw new ArgumentNullException(nameof(protectedData));
         }
 
-        /// <summary>
-        ///     Unprotects the specified protected data.
-        /// </summary>
-        /// <param name="protectedData">The protected data.</param>
-        /// <returns>System.Security.Claims.ClaimsIdentity.</returns>
-        public ClaimsIdentity Unprotect(string protectedData)
+        List<Claim> claims = new();
+
+        try
         {
-            if (protectedData == null)
+            byte[] unprotectedData = this._rsaCryptoServiceProvider.Decrypt(protectedData.ToBase64Bytes(), false);
+            string identityData = unprotectedData.ASCII();
+            string[] identityDatas = identityData.Split(',');
+            long timestamp = identityDatas[1].AsLong();
+            if (timestamp < DateTime.UtcNow.UnixTimestamp())
             {
-                throw new ArgumentNullException(nameof(protectedData));
+                claims.Add(new Claim(ClaimTypes.Expired, "True"));
             }
-
-            List<Claim> claims = new List<Claim>();
-
-            try
+            else
             {
-                byte[] unprotectedData = this.rsaCryptoServiceProvider.Decrypt(protectedData.ToBase64Bytes(), false);
-                string identityData = unprotectedData.ASCII();
-                string[] identityDatas = identityData.Split(',');
-                long timestamp = identityDatas[1]?.AsLong() ?? 0L;
-                if (timestamp < DateTime.UtcNow.UnixTimestamp())
-                {
-                    claims.Add(new Claim(ClaimTypes.Expired, "True"));
-                }
-                else
-                {
-                    claims.Add(new Claim(ClaimTypes.Name, identityDatas[0] ?? Anonymous));
-                    claims.Add(new Claim(ClaimTypes.Role, "User"));
-                    return new ClaimsIdentity(claims, identityDatas[2] ?? Unspecified);
-                }
+                claims.Add(new Claim(ClaimTypes.Name, identityDatas[0]));
+                claims.Add(new Claim(ClaimTypes.Role, "User"));
+                return new ClaimsIdentity(claims, identityDatas[2]);
             }
-            catch (Exception e)
-            {
-                claims.Add(new Claim(ClaimTypes.AuthorizationDecision, "Error:" + e.Message));
-            }
-
-            return new ClaimsIdentity(claims);
         }
+        catch (Exception e)
+        {
+            claims.Add(new Claim(ClaimTypes.AuthorizationDecision, "Error:" + e.Message));
+        }
+
+        return new ClaimsIdentity(claims);
     }
 }

@@ -11,29 +11,28 @@
 // </copyright>
 // *****************************************************************************************************************
 
-using Microsoft.AspNetCore.Authorization;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
-namespace Navyblue.Authentication.Authorizations
+namespace Navyblue.Authorization.Authorizations;
+
+/// <summary>
+///     ApplicationAuthorizeAttribute.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+public class ApplicationAuthorizeAttribute : AuthorizeAttribute
 {
     /// <summary>
-    ///     ApplicationAuthorizeAttribute.
+    ///     Initializes a new instance of the <see cref="ApplicationAuthorizeAttribute" /> class.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class ApplicationAuthorizeAttribute : AuthorizeAttribute
+    public ApplicationAuthorizeAttribute():this(AuthorizationScheme.BEARER)
     {
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="ApplicationAuthorizeAttribute" /> class.
-        /// </summary>
-        public ApplicationAuthorizeAttribute():this(AuthorizationScheme.Bearer)
-        {
-            this.Roles = "Application";
-            this.AuthenticationSchemes = AuthorizationScheme.Bearer;
-        }
+        this.Roles = "Application";
+        this.AuthenticationSchemes = AuthorizationScheme.BEARER;
+    }
 
-        private ApplicationAuthorizeAttribute(string schemes)
-        {
+    private ApplicationAuthorizeAttribute(string schemes)
+    {
 
-        }
-}
+    }
 }

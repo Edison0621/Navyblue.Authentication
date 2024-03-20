@@ -16,31 +16,30 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Navyblue.Authentication.Authorizations;
+using Navyblue.Authorization.Authorizations;
 using Navyblue.Authorization.Authorizations.NavyblueResult;
 
-namespace Navyblue.Authentication.Extensions
+namespace Navyblue.Authorization.Extensions;
+
+public static class AuthenticationExtensions
 {
-    public static class NavyAuthenticationExtensions
+    public static IApplicationBuilder AddBearer(this IApplicationBuilder app)
     {
-        public static IApplicationBuilder AddBearer(this IApplicationBuilder app)
-        {
-            app.UseAuthorization();
-            app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseAuthentication();
 
-            return app;
-        }
+        return app;
+    }
 
-        public static IServiceCollection AddBearerService(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<AuthorizationConfig>(configuration);
+    public static IServiceCollection AddBearerService(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<AuthorizationConfig>(configuration);
 
-            services.AddAuthentication(AuthorizationScheme.Bearer)
-                .AddScheme<BasicAuthenticationOptions, NavyAuthenticationHandler>(AuthorizationScheme.Bearer, null);
+        services.AddAuthentication(AuthorizationScheme.BEARER)
+            .AddScheme<BasicAuthenticationOptions, AuthenticationHandler>(AuthorizationScheme.BEARER, null);
 
-            services.AddMvc(p => p.Filters.Add(new NavyblueAuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())));
+        services.AddMvc(p => p.Filters.Add(new AuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())));
 
-            return services;
-        }
+        return services;
     }
 }

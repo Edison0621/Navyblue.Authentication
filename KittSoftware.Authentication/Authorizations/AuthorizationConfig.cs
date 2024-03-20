@@ -14,28 +14,27 @@
 
 using System.Collections.Generic;
 
-namespace Navyblue.Authentication.Authorizations
+namespace Navyblue.Authorization.Authorizations;
+
+public class AuthorizationConfig
 {
-    public class AuthorizationConfig
-    {
-        public bool UseSwaggerAsApplicationForDev { get; set; }
+    public bool UseSwaggerAsApplicationForDev { get; set; }
 
-        public List<string> IPAllowedLists { get; set; }
+    public List<string> AllowedLists { get; set; }
 
-        public string GovernmentServerPublicKey { get; set; }
+    public string GovernmentServerPublicKey { get; set; }
 
-        public string BearerAuthKeys { get; set; }
+    public string BearerAuthKeys { get; set; }
 
-        public int PCSignInExpirationSeconds { get; set; }
+    public int PcSignInExpirationSeconds { get; set; }
 
-        public int AppSignInExpirationSeconds { get; set; }
+    public int AppSignInExpirationSeconds { get; set; }
 
-        public int MobileSignInExpirationSeconds { get; set; }
+    public int MobileSignInExpirationSeconds { get; set; }
 
-        public string AndroidClientId { get; set; }
+    public string AndroidClientId { get; set; }
 
-        public string IOSClientId { get; set; }
+    public string IosClientId { get; set; }
 
-        public string AuthHeaderName { get; set; }
-    }
+    public string AuthHeaderName { get; set; }
 }

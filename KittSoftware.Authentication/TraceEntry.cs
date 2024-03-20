@@ -14,129 +14,128 @@
 
 using System;
 
-namespace Navyblue.Authorization
+namespace Navyblue.Authorization;
+
+/// <summary>
+///     TraceEntry.
+/// </summary>
+public class TraceEntry : IEquatable<TraceEntry>
 {
     /// <summary>
-    ///     TraceEntry.
+    ///     Gets or sets the client identifier.
     /// </summary>
-    public class TraceEntry : IEquatable<TraceEntry>
+    /// <value>The client identifier.</value>
+    public string ClientId { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the device identifier.
+    /// </summary>
+    /// <value>The device identifier.</value>
+    public string DeviceId { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the request identifier.
+    /// </summary>
+    /// <value>The request identifier.</value>
+    public string RequestId { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the session identifier.
+    /// </summary>
+    /// <value>The session identifier.</value>
+    public string SessionId { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the source ip.
+    /// </summary>
+    /// <value>The source ip.</value>
+    public string SourceIP { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the source user agent.
+    /// </summary>
+    /// <value>The source user agent.</value>
+    public string SourceUserAgent { get; init; }
+
+    /// <summary>
+    ///     Gets or sets the user identifier.
+    /// </summary>
+    /// <value>The user identifier.</value>
+    public string UserId { get; init; }
+
+    #region IEquatable<TraceEntry> Members
+
+    /// <summary>
+    ///     Indicates whether the current object is equal to another object of the same type.
+    /// </summary>
+    /// <returns>
+    ///     true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+    /// </returns>
+    /// <param name="other">An object to compare with this object.</param>
+    public bool Equals(TraceEntry other)
     {
-        /// <summary>
-        ///     Gets or sets the client identifier.
-        /// </summary>
-        /// <value>The client identifier.</value>
-        public string ClientId { get; set; }
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return string.Equals(this.ClientId, other.ClientId) && string.Equals(this.DeviceId, other.DeviceId) && string.Equals(this.RequestId, other.RequestId) && string.Equals(this.SessionId, other.SessionId) && string.Equals(this.SourceIP, other.SourceIP) && string.Equals(this.SourceUserAgent, other.SourceUserAgent) && string.Equals(this.UserId, other.UserId);
+    }
 
-        /// <summary>
-        ///     Gets or sets the device identifier.
-        /// </summary>
-        /// <value>The device identifier.</value>
-        public string DeviceId { get; set; }
+    #endregion IEquatable<TraceEntry> Members
 
-        /// <summary>
-        ///     Gets or sets the request identifier.
-        /// </summary>
-        /// <value>The request identifier.</value>
-        public string RequestId { get; set; }
+    /// <summary>
+    ///     Implements the !=.
+    /// </summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
+    /// <returns>The result of the operator.</returns>
+    public static bool operator !=(TraceEntry left, TraceEntry right)
+    {
+        return !Equals(left, right);
+    }
 
-        /// <summary>
-        ///     Gets or sets the session identifier.
-        /// </summary>
-        /// <value>The session identifier.</value>
-        public string SessionId { get; set; }
+    /// <summary>
+    ///     Implements the ==.
+    /// </summary>
+    /// <param name="left">The left.</param>
+    /// <param name="right">The right.</param>
+    /// <returns>The result of the operator.</returns>
+    public static bool operator ==(TraceEntry left, TraceEntry right)
+    {
+        return Equals(left, right);
+    }
 
-        /// <summary>
-        ///     Gets or sets the source ip.
-        /// </summary>
-        /// <value>The source ip.</value>
-        public string SourceIP { get; set; }
+    /// <summary>
+    ///     Determines whether the specified object is equal to the current object.
+    /// </summary>
+    /// <returns>
+    ///     true if the specified object  is equal to the current object; otherwise, false.
+    /// </returns>
+    /// <param name="obj">The object to compare with the current object. </param>
+    public override bool Equals(object obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != this.GetType()) return false;
+        return this.Equals((TraceEntry)obj);
+    }
 
-        /// <summary>
-        ///     Gets or sets the source user agent.
-        /// </summary>
-        /// <value>The source user agent.</value>
-        public string SourceUserAgent { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the user identifier.
-        /// </summary>
-        /// <value>The user identifier.</value>
-        public string UserId { get; set; }
-
-        #region IEquatable<TraceEntry> Members
-
-        /// <summary>
-        ///     Indicates whether the current object is equal to another object of the same type.
-        /// </summary>
-        /// <returns>
-        ///     true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
-        /// </returns>
-        /// <param name="other">An object to compare with this object.</param>
-        public bool Equals(TraceEntry other)
+    /// <summary>
+    ///     Serves as the default hash function.
+    /// </summary>
+    /// <returns>
+    ///     A hash code for the current object.
+    /// </returns>
+    public override int GetHashCode()
+    {
+        unchecked
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return string.Equals(this.ClientId, other.ClientId) && string.Equals(this.DeviceId, other.DeviceId) && string.Equals(this.RequestId, other.RequestId) && string.Equals(this.SessionId, other.SessionId) && string.Equals(this.SourceIP, other.SourceIP) && string.Equals(this.SourceUserAgent, other.SourceUserAgent) && string.Equals(this.UserId, other.UserId);
-        }
-
-        #endregion IEquatable<TraceEntry> Members
-
-        /// <summary>
-        ///     Implements the !=.
-        /// </summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator !=(TraceEntry left, TraceEntry right)
-        {
-            return !Equals(left, right);
-        }
-
-        /// <summary>
-        ///     Implements the ==.
-        /// </summary>
-        /// <param name="left">The left.</param>
-        /// <param name="right">The right.</param>
-        /// <returns>The result of the operator.</returns>
-        public static bool operator ==(TraceEntry left, TraceEntry right)
-        {
-            return Equals(left, right);
-        }
-
-        /// <summary>
-        ///     Determines whether the specified object is equal to the current object.
-        /// </summary>
-        /// <returns>
-        ///     true if the specified object  is equal to the current object; otherwise, false.
-        /// </returns>
-        /// <param name="obj">The object to compare with the current object. </param>
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return this.Equals((TraceEntry)obj);
-        }
-
-        /// <summary>
-        ///     Serves as the default hash function.
-        /// </summary>
-        /// <returns>
-        ///     A hash code for the current object.
-        /// </returns>
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hashCode = (this.ClientId != null ? this.ClientId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.DeviceId != null ? this.DeviceId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.RequestId != null ? this.RequestId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SessionId != null ? this.SessionId.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SourceIP != null ? this.SourceIP.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.SourceUserAgent != null ? this.SourceUserAgent.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
-                return hashCode;
-            }
+            int hashCode = (this.ClientId != null ? this.ClientId.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (this.DeviceId != null ? this.DeviceId.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (this.RequestId != null ? this.RequestId.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (this.SessionId != null ? this.SessionId.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (this.SourceIP != null ? this.SourceIP.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (this.SourceUserAgent != null ? this.SourceUserAgent.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (this.UserId != null ? this.UserId.GetHashCode() : 0);
+            return hashCode;
         }
     }
 }
