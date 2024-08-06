@@ -23,62 +23,67 @@ using Navyblue.Authorization.Authorizations;
 namespace Navyblue.Authorization;
 
 /// <summary>
-///     BaseApiController.
+/// BaseApiController.
 /// </summary>
+/// <seealso cref="Microsoft.AspNetCore.Mvc.Controller" />
 [ApiController]
-public abstract class AuthApiController : Controller
+public abstract class AuthApiController : ControllerBase
 {
+    /// <summary>
+    /// The access token protector
+    /// </summary>
     private static readonly Lazy<AccessTokenProtector> accessTokenProtector = new(() => InitAccessTokenProtector());
+    /// <summary>
+    /// The bearer authentication keys
+    /// </summary>
     private static string _bearerAuthKeys;
+    /// <summary>
+    /// The authentication configuration
+    /// </summary>
     private readonly AuthorizationConfig _authConfig;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AuthApiController"/> class.
+    /// Initializes a new instance of the <see cref="AuthApiController" /> class.
     /// </summary>
     /// <param name="authConfigOptions">The authentication configuration options.</param>
     protected AuthApiController(IOptions<AuthorizationConfig> authConfigOptions)
     {
         this._authConfig = authConfigOptions.Value;
-        _bearerAuthKeys = this._authConfig.BearerAuthKeys;
+        _bearerAuthKeys = this._authConfig.PrivateKey;
     }
 
+    /// <summary>
+    /// Gets the access token protector.
+    /// </summary>
+    /// <value>
+    /// The access token protector.
+    /// </value>
     private AccessTokenProtector AccessTokenProtector => accessTokenProtector.Value;
 
     /// <summary>
     /// Builds the authentication token.
     /// </summary>
-    /// <param name="userIdentifier">The user identifier.</param>
-    /// <param name="schemeName">Name of the scheme.</param>
-    /// <returns>System.String.</returns>
-    protected string BuildAuthToken(string userIdentifier, string schemeName)
-    {
-        ClaimsIdentity identity = this.BuildPrincipal(userIdentifier, schemeName);
-        return this.AccessTokenProtector.Protect(identity);
-    }
-
-    /// <summary>
-    /// Builds the principal.
-    /// </summary>
-    /// <param name="userIdentifier">The user identifier.</param>
+    /// <param name="claims">The claims.</param>
     /// <param name="schemeName">Name of the scheme.</param>
     /// <param name="expirationSeconds">The expiration seconds.</param>
-    /// <returns>ClaimsIdentity.</returns>
-    protected ClaimsIdentity BuildPrincipal(string userIdentifier, string schemeName, int expirationSeconds = 0)
+    /// <returns>
+    /// System.String.
+    /// </returns>
+    protected string BuildAuthToken(List<Claim> claims, string schemeName, long expirationSeconds = 0)
     {
-        List<Claim> claims = new()
-        {
-            new Claim(ClaimTypes.Name, userIdentifier),//TODO: you can add other property
-            new Claim(ClaimTypes.Expiration, expirationSeconds==0? this.GetExpiryTimestamp().ToString():expirationSeconds.ToString())
-        };
+        claims.Add(new Claim(ClaimTypes.Expiration, expirationSeconds == 0 ? this.GetExpiryTimestamp().ToString() : expirationSeconds.ToString()));
+        ClaimsIdentity identity = new(claims, schemeName);
 
-        return new ClaimsIdentity(claims, schemeName);
+        return this.AccessTokenProtector.Protect(identity);
     }
 
     /// <summary>
     /// Gets the expiry timestamp. 901 is Android， 902 is IOS
     /// How long the token will be effective
     /// </summary>
-    /// <returns>System.Int64.</returns>
+    /// <returns>
+    /// System.Int64.
+    /// </returns>
     protected long GetExpiryTimestamp()
     {
         int duration = this._authConfig.PcSignInExpirationSeconds;
@@ -98,7 +103,9 @@ public abstract class AuthApiController : Controller
     /// <summary>
     /// Initializes the jym access token protector.
     /// </summary>
-    /// <returns>AccessTokenProtector.</returns>
+    /// <returns>
+    /// AccessTokenProtector.
+    /// </returns>
     private static AccessTokenProtector InitAccessTokenProtector()
     {
         return new AccessTokenProtector(_bearerAuthKeys.HtmlDecode());

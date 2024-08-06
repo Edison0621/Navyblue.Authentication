@@ -93,13 +93,12 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
         IHttpContextAccessor httpContextAccessor,
         ILoggerFactory logger,
         UrlEncoder encoder,
-        ISystemClock clock,
         IOptions<AuthorizationConfig> authConfigOptions)
-        : base(options, logger, encoder, clock)
+        : base(options, logger, encoder)
     {
         this._httpContext = httpContextAccessor.HttpContext;
         this._authConfig = authConfigOptions.Value;
-        this._accessTokenProtector = new AccessTokenProtector(this._authConfig.BearerAuthKeys.HtmlDecode());
+        this._accessTokenProtector = new AccessTokenProtector(this._authConfig.PrivateKey.HtmlDecode());
         this.GovernmentServerPublicKey = this._authConfig.GovernmentServerPublicKey;
         this.UseSwaggerAsApplicationForDev = this._authConfig.UseSwaggerAsApplicationForDev;
         this.AllowedLists = this._authConfig.AllowedLists;
@@ -130,9 +129,7 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
 
         if (this.HasAuthorizationHeader(this._httpContext.Request)
             && this._httpContext.Request.Headers[this._authConfig.AuthHeaderName] == StringValues.Empty
-            && this.Identity != null
-            && this.Identity.IsAuthenticated
-            && this.Identity.AuthenticationType == AuthorizationScheme.BEARER
+            && this.Identity is { IsAuthenticated: true, AuthenticationType: AuthorizationScheme.BEARER }
             && this._httpContext.Response.StatusCode == (int)HttpStatusCode.OK)
         {
             await this.GenerateAndSetAccessToken();
@@ -188,7 +185,7 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
 
             if (this.CryptoServiceProvider.VerifyData(ticket.GetBytesOfASCII(), sign.ToBase64Bytes(), HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1))
             {
-                if (tokenPiece[3].AsLong(0) > DateTime.UtcNow.UnixTimestamp() && tokenPiece[1] == "") //TODO App.Host.Role)
+                if (tokenPiece[3].AsLong(0) > DateTime.UtcNow.UnixTimestamp() && tokenPiece[1] == "") //TODO App.Host.Role
                 {
                     this.Identity = new ClaimsIdentity(new List<Claim>
                     {
@@ -206,7 +203,7 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
     }
 
     /// <summary>
-    /// Generates the and set access token.
+    /// Generates and set access token.
     /// </summary>
     /// <returns></returns>
     private async Task GenerateAndSetAccessToken()

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Navyblue.Authorization;
@@ -32,7 +34,12 @@ public class AuthController : AuthApiController
     public IActionResult GetAuthToken()
     {
         string userIdentify = "111111111111111111111111111111111";
-        string authToken = this.BuildAuthToken(userIdentify, AuthorizationScheme.BEARER);
+        List<Claim> claims =
+        [
+            new Claim(ClaimTypes.Name, userIdentify)
+        ];
+
+        string authToken = this.BuildAuthToken(claims, AuthorizationScheme.BEARER);
         return this.Ok(authToken);
     }
 

@@ -23,7 +23,7 @@ namespace Navyblue.Authorization.Extensions;
 
 public static class AuthenticationExtensions
 {
-    public static IApplicationBuilder AddBearer(this IApplicationBuilder app)
+    public static IApplicationBuilder UseBearer(this IApplicationBuilder app)
     {
         app.UseAuthorization();
         app.UseAuthentication();
@@ -31,14 +31,14 @@ public static class AuthenticationExtensions
         return app;
     }
 
-    public static IServiceCollection AddBearerService(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddBearer(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<AuthorizationConfig>(configuration);
 
         services.AddAuthentication(AuthorizationScheme.BEARER)
             .AddScheme<BasicAuthenticationOptions, AuthenticationHandler>(AuthorizationScheme.BEARER, null);
 
-        services.AddMvc(p => p.Filters.Add(new AuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())));
+        services.AddControllers(p => p.Filters.Add(new AuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())));
 
         return services;
     }

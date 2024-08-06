@@ -24,7 +24,7 @@ public class AuthorizationConfig
 
     public string GovernmentServerPublicKey { get; set; }
 
-    public string BearerAuthKeys { get; set; }
+    public string PrivateKey { get; set; }
 
     public int PcSignInExpirationSeconds { get; set; }
 
