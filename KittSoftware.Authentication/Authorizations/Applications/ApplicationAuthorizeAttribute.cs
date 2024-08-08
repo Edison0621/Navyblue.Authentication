@@ -27,7 +27,7 @@ public class ApplicationAuthorizeAttribute : AuthorizeAttribute
     /// </summary>
     public ApplicationAuthorizeAttribute() : this(AuthorizationScheme.INTERNAL_AUTH)
     {
-        this.Roles = "Application";
+        this.Roles = AuthorizationRole.Application;
         this.AuthenticationSchemes = AuthorizationScheme.INTERNAL_AUTH;
     }
 

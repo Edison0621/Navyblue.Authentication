@@ -188,7 +188,7 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
         this.Identity = new ClaimsIdentity(new List<Claim>
         {
             new(ClaimTypes.Name, "Localhost"),
-            new(ClaimTypes.Role, "Application")
+            new(ClaimTypes.Role, AuthorizationRole.Application)
         }, AuthorizationScheme.INTERNAL_AUTH);
     }
 
@@ -197,7 +197,7 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
         this.Identity = new ClaimsIdentity(new List<Claim>
         {
             new(ClaimTypes.Name, "Swagger"),
-            new(ClaimTypes.Role, "Application")
+            new(ClaimTypes.Role, AuthorizationRole.Application)
         }, AuthorizationScheme.INTERNAL_AUTH);
     }
 
@@ -207,13 +207,13 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
         this.Identity = new ClaimsIdentity(new List<Claim>
         {
             new(ClaimTypes.Name, $"IP: {ip}"),
-            new(ClaimTypes.Role, "Application")
+            new(ClaimTypes.Role, AuthorizationRole.Application)
         }, AuthorizationScheme.INTERNAL_AUTH);
     }
 
     private void AuthorizeApplicationViaAuthToken(HttpRequest request)
     {
-        string token = request.Headers[this._authConfig.AuthHeaderName].ToString()[(AuthorizationScheme.INTERNAL_AUTH.Length + 1)..].ToBase64Bytes().ASCII();
+        string token = request.Headers[AuthorizationHeaderName.ApplicationName].ToString()[(AuthorizationScheme.INTERNAL_AUTH.Length + 1)..].ToBase64Bytes().ASCII();
         string[] tokenPiece = token?.Split(',');
         if (tokenPiece?.Length == 5)
         {
@@ -222,12 +222,12 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
 
             if (this.CryptoServiceProvider.VerifyData(ticket.GetBytesOfASCII(), sign.ToBase64Bytes(), HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1))
             {
-                if (tokenPiece[3].AsLong(0) > DateTime.UtcNow.UnixTimestamp() && tokenPiece[1] == "Application")
+                if (tokenPiece[3].AsLong(0) > DateTime.UtcNow.UnixTimestamp() && tokenPiece[1] == AuthorizationRole.Application)
                 {
                     this.Identity = new ClaimsIdentity(new List<Claim>
                     {
                         new(ClaimTypes.Name, tokenPiece[0]),
-                        new(ClaimTypes.Role, "Application")
+                        new(ClaimTypes.Role, AuthorizationRole.Application)
                     }, AuthorizationScheme.INTERNAL_AUTH);
                 }
             }

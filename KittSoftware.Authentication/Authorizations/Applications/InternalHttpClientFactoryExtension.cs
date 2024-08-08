@@ -26,7 +26,7 @@ public static class InternalHttpClientFactoryExtension
         RSA rsa = serviceProvider.GetRequiredService<RSA>();
         HttpClient client = httpClientFactory.CreateClient(applicationName);
 
-        client.DefaultRequestHeaders.Add("App-Authorization", $"{AuthorizationScheme.INTERNAL_AUTH} {TokenGenerator.GenerateInternalToken(applicationName, "Application", otherInfo, DateTime.UtcNow.AddHours(1), rsa)}");
+        client.DefaultRequestHeaders.Add(AuthorizationHeaderName.ApplicationName, $"{AuthorizationScheme.INTERNAL_AUTH} {TokenGenerator.GenerateInternalToken(applicationName, "Application", otherInfo, DateTime.UtcNow.AddHours(1), rsa)}");
         return client;
     }
 }

@@ -25,7 +25,7 @@ public class UserAuthorizeAttribute : AuthorizeAttribute
     /// </summary>
     public UserAuthorizeAttribute():this(AuthorizationScheme.BEARER)
     {
-        this.Roles = "User";
+        this.Roles = AuthorizationRole.User;
         this.AuthenticationSchemes = AuthorizationScheme.BEARER;
     }
 
