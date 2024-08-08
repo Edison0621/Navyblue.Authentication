@@ -33,25 +33,36 @@ using Newtonsoft.Json.Linq;
 
 namespace Navyblue.Authorization.Authorizations;
 
+/// <summary>
+/// 
+/// </summary>
 public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOptions>
 {
     /// <summary>
-    ///     Gets a value indicating whether [use swagger as application for dev].
+    /// Gets a value indicating whether [use swagger as application for dev].
     /// </summary>
-    /// <value><c>true</c> if [use swagger as application for dev]; otherwise, <c>false</c>.</value>
+    /// <value>
+    ///   <c>true</c> if [use swagger as application for dev]; otherwise, <c>false</c>.
+    /// </value>
     public bool UseSwaggerAsApplicationForDev { get; }
 
     /// <summary>
-    ///     Gets or sets the government server public key.
+    /// Gets or sets the internal private key.
     /// </summary>
-    /// <value>The government server public key.</value>
-    public string GovernmentServerPublicKey { get; set; }
+    public string InternalPrivateKey { get; set; }
 
+    /// <summary>
+    /// Gets the crypto service provider.
+    /// </summary>
+    /// <value>
+    /// The crypto service provider.
+    /// </value>
+    /// <exception cref="System.Exception">Bad format key with {0}".FormatWith(this.InternalPrivateKey)</exception>
     private RSA CryptoServiceProvider
     {
         get
         {
-            if (this.GovernmentServerPublicKey.IsNullOrEmpty())
+            if (this.InternalPrivateKey.IsNullOrEmpty())
             {
                 return null;
             }
@@ -59,17 +70,20 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
             try
             {
                 RSA rsa = RSA.Create();
-                rsa.FromXmlString(this.GovernmentServerPublicKey);
+                rsa.FromXmlString(this.InternalPrivateKey.HtmlDecode());
 
                 return rsa;
             }
             catch (Exception e)
             {
-                throw new Exception("Bad format key with {0}".FormatWith(this.GovernmentServerPublicKey), e);
+                throw new Exception("Bad format key with {0}".FormatWith(this.InternalPrivateKey), e);
             }
         }
     }
 
+    /// <summary>
+    /// Gets or sets the identity.
+    /// </summary>
     private ClaimsIdentity Identity
     {
         get => this._httpContext?.User.Identity as ClaimsIdentity;
@@ -82,12 +96,35 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
         }
     }
 
+    /// <summary>
+    /// Gets the allowed lists.
+    /// </summary>
+    /// <value>
+    /// The allowed lists.
+    /// </value>
     private List<string> AllowedLists { get; }
 
+    /// <summary>
+    /// The HTTP context
+    /// </summary>
     private readonly HttpContext _httpContext;
+    /// <summary>
+    /// The authentication configuration
+    /// </summary>
     private readonly AuthorizationConfig _authConfig;
+    /// <summary>
+    /// The access token protector
+    /// </summary>
     private readonly AccessTokenProtector _accessTokenProtector;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuthenticationHandler"/> class.
+    /// </summary>
+    /// <param name="options">The options.</param>
+    /// <param name="httpContextAccessor">The HTTP context accessor.</param>
+    /// <param name="logger">The logger.</param>
+    /// <param name="encoder">The encoder.</param>
+    /// <param name="authConfigOptions">The authentication configuration options.</param>
     public AuthenticationHandler(
         IOptionsMonitor<BasicAuthenticationOptions> options,
         IHttpContextAccessor httpContextAccessor,
@@ -99,18 +136,18 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
         this._httpContext = httpContextAccessor.HttpContext;
         this._authConfig = authConfigOptions.Value;
         this._accessTokenProtector = new AccessTokenProtector(this._authConfig.PrivateKey.HtmlDecode());
-        this.GovernmentServerPublicKey = this._authConfig.GovernmentServerPublicKey;
+        this.InternalPrivateKey = this._authConfig.InternalPrivateKey;
         this.UseSwaggerAsApplicationForDev = this._authConfig.UseSwaggerAsApplicationForDev;
         this.AllowedLists = this._authConfig.AllowedLists;
     }
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        if (this.HasAuthorizationHeader(this._httpContext.Request) && this._httpContext.Request.Headers[this._authConfig.AuthHeaderName] != StringValues.Empty)
+        if (this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.BEARER))
         {
             this.AuthorizeUserViaBearerToken(this._httpContext.Request);
         }
-        else if (this.GovernmentServerPublicKey != null && this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.INTERNAL_AUTH))
+        else if (this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.INTERNAL_AUTH))
         {
             this.AuthorizeApplicationViaAuthToken(this._httpContext.Request);
         }
@@ -127,7 +164,7 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
             this.AuthorizeApplicationIfFromLocalhost();
         }
 
-        if (this.HasAuthorizationHeader(this._httpContext.Request)
+        if (this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.BEARER)
             && this._httpContext.Request.Headers[this._authConfig.AuthHeaderName] == StringValues.Empty
             && this.Identity is { IsAuthenticated: true, AuthenticationType: AuthorizationScheme.BEARER }
             && this._httpContext.Response.StatusCode == (int)HttpStatusCode.OK)
@@ -136,12 +173,12 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
         }
 
         ClaimsPrincipal principal = new(this.Identity);
-        AuthenticationTicket ticket = new(principal, this.Scheme.Name);
+        AuthenticationTicket ticket = new(principal, principal.Identity?.AuthenticationType ?? this.Scheme.Name);
 
         return AuthenticateResult.Success(ticket);
     }
 
-    private bool HasAuthorizationHeader(HttpRequest request, string scheme = "Bearer")
+    private bool HasAuthorizationHeader(HttpRequest request, string scheme)
     {
         return request.Headers[this._authConfig.AuthHeaderName] != StringValues.Empty && request.Headers[this._authConfig.AuthHeaderName].ToString().Contains(scheme);
     }
@@ -176,7 +213,7 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
 
     private void AuthorizeApplicationViaAuthToken(HttpRequest request)
     {
-        string token = request.Headers[this._authConfig.AuthHeaderName].ToString().ToBase64Bytes().ASCII();
+        string token = request.Headers[this._authConfig.AuthHeaderName].ToString()[(AuthorizationScheme.INTERNAL_AUTH.Length + 1)..].ToBase64Bytes().ASCII();
         string[] tokenPiece = token?.Split(',');
         if (tokenPiece?.Length == 5)
         {
@@ -185,7 +222,7 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
 
             if (this.CryptoServiceProvider.VerifyData(ticket.GetBytesOfASCII(), sign.ToBase64Bytes(), HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1))
             {
-                if (tokenPiece[3].AsLong(0) > DateTime.UtcNow.UnixTimestamp() && tokenPiece[1] == "") //TODO App.Host.Role
+                if (tokenPiece[3].AsLong(0) > DateTime.UtcNow.UnixTimestamp() && tokenPiece[1] == "Application")
                 {
                     this.Identity = new ClaimsIdentity(new List<Claim>
                     {

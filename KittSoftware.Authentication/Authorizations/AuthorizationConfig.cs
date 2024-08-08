@@ -22,7 +22,7 @@ public class AuthorizationConfig
 
     public List<string> AllowedLists { get; set; }
 
-    public string GovernmentServerPublicKey { get; set; }
+    public string InternalPrivateKey { get; set; }
 
     public string PrivateKey { get; set; }
 

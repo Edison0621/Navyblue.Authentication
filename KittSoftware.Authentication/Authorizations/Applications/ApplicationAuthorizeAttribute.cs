@@ -14,7 +14,7 @@
 using System;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Navyblue.Authorization.Authorizations;
+namespace Navyblue.Authorization.Authorizations.Applications;
 
 /// <summary>
 ///     ApplicationAuthorizeAttribute.
@@ -25,10 +25,10 @@ public class ApplicationAuthorizeAttribute : AuthorizeAttribute
     /// <summary>
     ///     Initializes a new instance of the <see cref="ApplicationAuthorizeAttribute" /> class.
     /// </summary>
-    public ApplicationAuthorizeAttribute():this(AuthorizationScheme.BEARER)
+    public ApplicationAuthorizeAttribute() : this(AuthorizationScheme.INTERNAL_AUTH)
     {
         this.Roles = "Application";
-        this.AuthenticationSchemes = AuthorizationScheme.BEARER;
+        this.AuthenticationSchemes = AuthorizationScheme.INTERNAL_AUTH;
     }
 
     private ApplicationAuthorizeAttribute(string schemes)

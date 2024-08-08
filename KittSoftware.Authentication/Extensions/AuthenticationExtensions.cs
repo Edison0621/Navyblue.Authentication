@@ -18,6 +18,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Navyblue.Authorization.Authorizations;
 using Navyblue.Authorization.Authorizations.NavyblueResult;
+using System.Security.Cryptography;
+using Navyblue.BaseLibrary;
 
 namespace Navyblue.Authorization.Extensions;
 
@@ -35,8 +37,18 @@ public static class AuthenticationExtensions
     {
         services.Configure<AuthorizationConfig>(configuration);
 
+        services.AddSingleton(provider =>
+        {
+            RSA rsa = RSA.Create();
+            rsa.FromXmlString(configuration["InternalPrivateKey"]!.HtmlDecode());
+            return rsa;
+        });
+
         services.AddAuthentication(AuthorizationScheme.BEARER)
             .AddScheme<BasicAuthenticationOptions, AuthenticationHandler>(AuthorizationScheme.BEARER, null);
+
+        services.AddAuthentication(AuthorizationScheme.INTERNAL_AUTH)
+            .AddScheme<BasicAuthenticationOptions, AuthenticationHandler>(AuthorizationScheme.INTERNAL_AUTH, null);
 
         services.AddControllers(p => p.Filters.Add(new AuthorizationFilter(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build())));
 

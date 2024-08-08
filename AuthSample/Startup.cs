@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -45,6 +46,12 @@ public class Startup
         services.AddOptions();
 
         services.AddBearer(this.Configuration.GetSection("NavyAuthorizationConfig"));
+
+        services.AddHttpClient("AuthSample")
+            .ConfigureHttpClient((provider, client) =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5001/");
+            });
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
