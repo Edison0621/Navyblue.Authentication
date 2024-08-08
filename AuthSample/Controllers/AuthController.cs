@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
@@ -80,7 +79,7 @@ public class AuthController : AuthApiController
     [Route("GetAppAuthToken")]
     public IActionResult GetAppAuthToken()
     {
-        string token = TokenGenerator.GenerateInternalToken("AuthSample", "Application", "otherInfo", DateTime.UtcNow.AddHours(1), this._rsa);
+        string token = TokenGenerator.GenerateInternalToken("AuthSample", "Application", "otherInfo", 86400, this._rsa);
         return this.Ok(token);
     }
 

@@ -16,7 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.Encodings.Web;
@@ -143,11 +142,16 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
 
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        if (!this.HasContainAnyAuthorizationHeader(this._httpContext.Request, AuthorizationHeaderName.AuthorizationHeaderNames))
+        {
+            return await Task.FromResult(AuthenticateResult.Fail("No authorization found"));
+        }
+
         if (this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.BEARER))
         {
             this.AuthorizeUserViaBearerToken(this._httpContext.Request);
         }
-        else if (this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.INTERNAL_AUTH))
+        else if (this.HasApplicationAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.INTERNAL_AUTH))
         {
             this.AuthorizeApplicationViaAuthToken(this._httpContext.Request);
         }
@@ -164,23 +168,41 @@ public class AuthenticationHandler : AuthenticationHandler<BasicAuthenticationOp
             this.AuthorizeApplicationIfFromLocalhost();
         }
 
-        if (this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.BEARER)
-            && this._httpContext.Request.Headers[this._authConfig.AuthHeaderName] == StringValues.Empty
-            && this.Identity is { IsAuthenticated: true, AuthenticationType: AuthorizationScheme.BEARER }
-            && this._httpContext.Response.StatusCode == (int)HttpStatusCode.OK)
-        {
-            await this.GenerateAndSetAccessToken();
-        }
+        //if (this.HasAuthorizationHeader(this._httpContext.Request, AuthorizationScheme.BEARER)
+        //    && this._httpContext.Request.Headers[this._authConfig.AuthHeaderName] == StringValues.Empty
+        //    && this.Identity is { IsAuthenticated: true, AuthenticationType: AuthorizationScheme.BEARER }
+        //    && this._httpContext.Response.StatusCode == (int)HttpStatusCode.OK)
+        //{
+        //    await this.GenerateAndSetAccessToken();
+        //}
 
         ClaimsPrincipal principal = new(this.Identity);
         AuthenticationTicket ticket = new(principal, principal.Identity?.AuthenticationType ?? this.Scheme.Name);
 
-        return AuthenticateResult.Success(ticket);
+        return await Task.FromResult(AuthenticateResult.Success(ticket));
+    }
+
+    private bool HasContainAnyAuthorizationHeader(HttpRequest request, Dictionary<string, string> values)
+    {
+        foreach (KeyValuePair<string, string> kvp in values)
+        {
+            if (!request.Headers.TryGetValue(kvp.Value, out StringValues _))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private bool HasAuthorizationHeader(HttpRequest request, string scheme)
     {
         return request.Headers[this._authConfig.AuthHeaderName] != StringValues.Empty && request.Headers[this._authConfig.AuthHeaderName].ToString().Contains(scheme);
+    }
+
+    private bool HasApplicationAuthorizationHeader(HttpRequest request, string scheme)
+    {
+        return request.Headers[AuthorizationHeaderName.ApplicationName] != StringValues.Empty && request.Headers[AuthorizationHeaderName.ApplicationName].ToString().Contains(scheme);
     }
 
     private void AuthorizeApplicationIfFromLocalhost()

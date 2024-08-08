@@ -21,12 +21,12 @@ namespace Navyblue.Authorization.Authorizations.Applications;
 
 public static class InternalHttpClientFactoryExtension
 {
-    public static HttpClient CreateInternalClient(this IHttpClientFactory httpClientFactory, IServiceProvider serviceProvider, string applicationName, string otherInfo = "")
+    public static HttpClient CreateInternalClient(this IHttpClientFactory httpClientFactory, IServiceProvider serviceProvider, string applicationName, string otherInfo = "", int expireSeconds = 86400)
     {
         RSA rsa = serviceProvider.GetRequiredService<RSA>();
         HttpClient client = httpClientFactory.CreateClient(applicationName);
 
-        client.DefaultRequestHeaders.Add(AuthorizationHeaderName.ApplicationName, $"{AuthorizationScheme.INTERNAL_AUTH} {TokenGenerator.GenerateInternalToken(applicationName, "Application", otherInfo, DateTime.UtcNow.AddHours(1), rsa)}");
+        client.DefaultRequestHeaders.Add(AuthorizationHeaderName.ApplicationName, $"{AuthorizationScheme.INTERNAL_AUTH} {TokenGenerator.GenerateInternalToken(applicationName, "Application", otherInfo, expireSeconds, rsa)}");
         return client;
     }
 }

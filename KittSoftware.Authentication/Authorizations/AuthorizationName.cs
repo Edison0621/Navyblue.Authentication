@@ -11,6 +11,8 @@
 // </copyright>
 // ******************************************************************************************************
 
+using System.Collections.Generic;
+
 namespace Navyblue.Authorization.Authorizations;
 
 /// <summary>
@@ -21,5 +23,10 @@ public static class AuthorizationHeaderName
     /// <summary>
     /// The application name
     /// </summary>
-    public static readonly string ApplicationName = "ApplicationName";
+    public static readonly string ApplicationName = "App-Authorization";
+
+    public static readonly Dictionary<string, string> AuthorizationHeaderNames = new()
+    {
+        { "ApplicationName", "App-Authorization" }
+    };
 }

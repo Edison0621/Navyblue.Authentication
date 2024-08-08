@@ -21,9 +21,9 @@ namespace Navyblue.Authorization.Authorizations.Applications;
 
 public static class TokenGenerator
 {
-    public static string GenerateInternalToken(string name, string role, string otherInfo, DateTime expires, RSA privateKey)
+    public static string GenerateInternalToken(string name, string role, string otherInfo, long expiresSeconds, RSA privateKey)
     {
-        string ticket = $"{name},{role},{otherInfo},{new DateTimeOffset(expires).ToUnixTimeSeconds()}";
+        string ticket = $"{name},{role},{otherInfo},{DateTime.UtcNow.AddSeconds(expiresSeconds).UnixTimestamp()}";
         byte[] ticketBytes = ticket.GetBytesOfASCII();
         byte[] signatureBytes = privateKey.SignData(ticketBytes, HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
         string signature = Convert.ToBase64String(signatureBytes);
