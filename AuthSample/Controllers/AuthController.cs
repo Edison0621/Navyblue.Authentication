@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -25,13 +28,24 @@ public class AuthController : AuthApiController
     private readonly RSA _rsa;
 
     /// <summary>
+    /// The HTTP client factory
+    /// </summary>
+    private readonly IHttpClientFactory _httpClientFactory;
+
+    private readonly IServiceProvider _serviceProvider;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="AuthController" /> class.
     /// </summary>
     /// <param name="authConfigOptions">The authentication configuration options.</param>
     /// <param name="rsa">The RSA.</param>
-    public AuthController(IOptions<AuthorizationConfig> authConfigOptions, RSA rsa):base(authConfigOptions)
+    /// <param name="httpClientFactory">The HTTP client factory.</param>
+    /// <param name="serviceProvider"></param>
+    public AuthController(IOptions<AuthorizationConfig> authConfigOptions, RSA rsa, IHttpClientFactory httpClientFactory, IServiceProvider serviceProvider) : base(authConfigOptions)
     {
         this._rsa = rsa;
+        this._httpClientFactory = httpClientFactory;
+        this._serviceProvider = serviceProvider;
     }
 
     /// <summary>
@@ -108,5 +122,19 @@ public class AuthController : AuthApiController
     public IActionResult NonAuthTest()
     {
         return this.Ok(this.User.Identity?.Name);
+    }
+
+    /// <summary>
+    /// Fetches the internal data.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("fetch-internal-data")]
+    public async Task<IActionResult> FetchInternalData()
+    {
+        HttpClient client = this._httpClientFactory.CreateInternalClient(this._serviceProvider, "ApplicationName");
+        HttpResponseMessage response = await client.GetAsync("api/yourcontroller/internal");
+        string result = await response.Content.ReadAsStringAsync();
+
+        return this.Ok(result);
     }
 }
