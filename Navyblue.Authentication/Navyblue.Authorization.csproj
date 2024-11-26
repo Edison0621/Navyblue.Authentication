@@ -11,7 +11,7 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.7" />
-    <PackageReference Include="Navyblue.BaseLibrary" Version="2.0.0" />
+    <PackageReference Include="Navyblue.BaseLibrary" Version="2.0.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="ReflectionMagic" Version="5.0.1" />
   </ItemGroup>
